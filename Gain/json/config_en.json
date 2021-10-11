@@ -1,0 +1,27 @@
+﻿{
+    "header": "Gain",
+    "okResult": "UploadJSON",//do not change
+    "name": "EditPluginConfiguration",//do not change
+    "origin": "Plugin",//do not change
+    "version": "VERSION",//do not change 
+    "sections": [
+        {
+            "header": "Audio Gain",
+            "displayType": "Form",
+            "items": [
+              { "text": "Spectrum Analyser", "value": "", "type": "SpectrumAnalyser", "width": 320, "height": 240},
+              { "text": "Band Pass Equalizer", "type": "Header"},
+              { "text": "Enabled", "value": false, "type": "Boolean", "bindto": "enabled", "live": true },
+              { "text": "100Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band1", "live": true},
+              { "text": "200Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band2", "live": true},
+              { "text": "400Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band3", "live": true},
+              { "text": "800Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band4", "live": true},
+              { "text": "1200Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band5", "live": true},
+              { "text": "2400Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band6", "live": true},
+              { "text": "4800Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band7", "live": true},
+              { "text": "9600Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band8", "live": true}
+            ]
+        }
+        
+    ]
+}

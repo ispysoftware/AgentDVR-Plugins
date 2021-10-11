@@ -1,0 +1,70 @@
+﻿{
+    "header": "Gain",
+    "okResult": "UploadJSON",
+    "name": "EditPluginConfiguration",
+    "origin": "Plugin",
+    "version": "VERSION",
+  "sections": [
+    {
+      "header": "General",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Settings",
+          "type": "Header"
+        },
+        {
+          "text": "Alert",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "AlertsEnabled",
+          "live": true,
+          "help": "This demo plugin generates an alert every 10 seconds."
+        },
+        {
+          "text": "Mirror Effect",
+          "type": "Header"
+        },
+        {
+          "text": "Enabled",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "VideoEnabled",
+          "live": true,
+          "help": "Applies a mirror effect to the video"
+        },
+        {
+          "text": "Size",
+          "value": "",
+          "type": "Slider",
+          "range": false,
+          "min": 1,
+          "max": 10,
+          "bindto": "Size",
+          "live": true
+        },
+        {
+          "text": "Volume Effect",
+          "type": "Header"
+        },
+        {
+          "text": "Enabled",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "AudioEnabled",
+          "live": true
+        },
+        {
+          "text": "Volume",
+          "value": "",
+          "type": "Slider",
+          "range": false,
+          "min": 0,
+          "max": 100,
+          "bindto": "Volume",
+          "live": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Plugins</RootNamespace>
+    <AssemblyName>Gain</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>DeveloperInABox</Authors>
+    <Description>Video Surveillance Software</Description>
+    <Copyright>2020 DeveloperInABox</Copyright>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="1.10.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="json\config_en.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if EXIST "D:\Projects\agent-service\AgentService\Plugins\Gain\" (
+    xcopy "*.*" "D:\Projects\agent-service\AgentService\Plugins\Gain\" /F /R /Y /I
+)</PostBuildEvent>
+    <Version>1.1.1</Version>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

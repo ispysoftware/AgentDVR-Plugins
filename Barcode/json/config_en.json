@@ -1,0 +1,167 @@
+﻿{
+    "header": "Gain",
+    "okResult": "UploadJSON",
+    "name": "EditPluginConfiguration",
+    "origin": "Plugin",
+    "version": "VERSION",
+  "sections": [
+    {
+      "header": "General",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Settings",
+          "type": "Header",
+          "help": "Add an action on the camera for PLUGIN EVENT and use the tag {MSG} to retrieve the detected barcode. Use the menu above to choose the barcode types to look for."
+        },
+        {
+          "text": "Interval",
+          "value": false,
+          "type": "Int32",
+          "min": 100,
+          "max": 20000,
+          "bindto": "Interval",
+          "help": "How often to scan - milliseconds (1000 = 1 second)"
+        },
+        {
+          "text": "Intensive",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "Intensive",
+          "help": "Put extra effort into finding barcodes (uses more CPU)"
+        }
+      ]
+    },
+    {
+      "header": "Barcode Types",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Barcode Types",
+          "type": "Header",
+          "help": "Select only the types you need to maximise performance"
+        },
+        {
+          "text": "AZTEC",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "AZTEC"
+        },
+        {
+          "text": "CODABAR",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "CODABAR"
+        },
+        {
+          "text": "CODE_128",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "CODE_128"
+        },
+        {
+          "text": "CODE_39",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "CODE_39"
+        },
+        {
+          "text": "CODE_93",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "CODE_93"
+        },
+        {
+          "text": "DATA_MATRIX",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "DATA_MATRIX"
+        },
+        {
+          "text": "EAN_13",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "EAN_13"
+        },
+        {
+          "text": "IMB",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "IMB"
+        },
+        {
+          "text": "ITF",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "ITF"
+        },
+        {
+          "text": "MAXICODE",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "MAXICODE"
+        },
+        {
+          "text": "MSI",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "MSI"
+        },
+        {
+          "text": "PDF_417",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "PDF_417"
+        },
+        {
+          "text": "PHARMACODE",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "PHARMACODE"
+        },
+        {
+          "text": "PLESSEY",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "PLESSEY"
+        },
+        {
+          "text": "QR_CODE",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "QR_CODE"
+        },
+        {
+          "text": "RSS_14",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "RSS_14"
+        },
+        {
+          "text": "RSS_Expanded",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "RSS_Expanded"
+        },
+        {
+          "text": "UPC_A",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "UPC_A"
+        },
+        {
+          "text": "UPC_E",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "UPC_E"
+        },
+        {
+          "text": "UPC_EAN_Extension",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "UPC_EAN_Extension"
+        }
+      ]
+    }
+  ]
+}
