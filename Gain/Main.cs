@@ -19,6 +19,21 @@ namespace Plugins
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
+
+        private configuration _configObject;
+        public configuration ConfigObject
+        {
+            get
+            {
+                if (_configObject != null)
+                    return _configObject;
+
+                _configObject = new configuration();
+                return _configObject;
+            }
+        }
+
+
         class EqualizerBand
         {
             public float Frequency { get; set; }
@@ -55,14 +70,14 @@ namespace Plugins
         {
             _bands = new[]
                     {
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 100, Gain = Utils.ConfigObject.band1},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 200, Gain = Utils.ConfigObject.band2},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 400, Gain = Utils.ConfigObject.band3},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 800, Gain = Utils.ConfigObject.band4},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 1200, Gain =Utils.ConfigObject.band5},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 2400, Gain =Utils.ConfigObject.band6},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 4800, Gain =Utils.ConfigObject.band7},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 9600, Gain =Utils.ConfigObject.band8}
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 100, Gain = ConfigObject.band1},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 200, Gain = ConfigObject.band2},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 400, Gain = ConfigObject.band3},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 800, Gain = ConfigObject.band4},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 1200, Gain =ConfigObject.band5},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 2400, Gain =ConfigObject.band6},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 4800, Gain =ConfigObject.band7},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 9600, Gain =ConfigObject.band8}
                     };
 
             if (_filters == null)
@@ -89,7 +104,7 @@ namespace Plugins
             byte[] truncArray = new byte[bytesRecorded];
 
             Array.Copy(rawData, truncArray, truncArray.Length);
-            if (Utils.ConfigObject.enabled)
+            if (ConfigObject.enabled)
             {
                 if (_update)
                 {
@@ -184,7 +199,7 @@ namespace Plugins
         public string GetConfiguration(string languageCode)
         {
             //populate json
-            dynamic d = Utils.PopulateResponse(Utils.Json(languageCode), Utils.ConfigObject);
+            dynamic d = Utils.PopulateResponse(ResourceLoader.LoadJson(languageCode), ConfigObject);
             return JsonConvert.SerializeObject(d);
         }
 
@@ -194,7 +209,7 @@ namespace Plugins
             try
             {
                 dynamic d = JsonConvert.DeserializeObject(json);
-                Utils.PopulateObject(d, Utils.ConfigObject);
+                Utils.PopulateObject(d, ConfigObject);
                 _update = true;
             }
             catch (Exception ex)

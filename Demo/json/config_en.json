@@ -65,6 +65,203 @@
           "live": true
         }
       ]
+    },
+    {
+      "header": "Example Controls",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "String",
+          "value": "",
+          "type": "String",
+          "bindto": "Example_String"
+        },
+        {
+          "text": "Info",
+          "value": "<b>Some HTML Content</b>",
+          "type": "Info",
+          "bindto": "Example_Info"
+        },
+        {
+          "text": "Link",
+          "url": "https://www.ispyconnect.com",
+          "value": "Click here",
+          "type": "Link"
+        },
+        {
+          "text": "Checkbox",
+          "value": true,
+          "type": "Boolean",
+          "bindto": "Example_Checkbox"
+        },
+        {
+          "text": "Select",
+          "value": "",
+          "type": "Select",
+          "help": "Select your favorite food",
+          "bindto": "Example_Select",
+          "options": [
+            {
+              "text": "Cake",
+              "value": "cake"
+            },
+            {
+              "text": "Steak",
+              "value": "steak"
+            },
+            {
+              "text": "Pizza",
+              "value": "pizza"
+            }
+          ]
+        },
+        {
+          "text": "Command",
+          "value": "",
+          "type": "Select",
+          "help": "Select a command",
+          "bindto": "Example_SelectCommand",
+          "options": [
+            "COMMANDS"
+          ]
+        },
+        {
+          "text": "Sound",
+          "value": "",
+          "type": "Select",
+          "help": "Select a sound",
+          "bindto": "Example_SelectSound",
+          "options": [
+            "SOUNDS"
+          ]
+        },
+        {
+          "text": "Overlay",
+          "value": "",
+          "type": "Select",
+          "help": "Select an overlay",
+          "bindto": "Example_SelectOverlay",
+          "options": [
+            "OVERLAYS"
+          ]
+        },
+        {
+          "text": "Slider",
+          "value": 50,
+          "type": "Slider",
+          "range": false,
+          "min": 30,
+          "max": 100,
+          "help": "Set the quality",
+          "bindto": "Example_Slider"
+        },
+        {
+          "text": "Range",
+          "value": [],
+          "type": "Slider",
+          "range": true,
+          "min": 30,
+          "max": 100,
+          "help": "Set the limits",
+          "bindto": "Example_Range_Min,Example_Range_Max"
+        },
+        {
+          "text": "Decimal",
+          "value": 0.5,
+          "type": "Decimal",
+          "min": 0,
+          "max": 9999,
+          "bindto": "Example_Decimal"
+        },
+        {
+          "text": "Int32",
+          "value": 100,
+          "type": "Int32",
+          "min": 0,
+          "max": 99999999,
+          "bindto": "Example_Int32"
+        },
+        {
+          "text": "Color",
+          "value": "#ff0000",
+          "type": "Color",
+          "converter": "rgbtohex",
+          "bindto": "Example_Color"
+        },
+        {
+          "text": "Time",
+          "value": "",
+          "type": "Time",
+          "unit": "min",
+          "step": "60",
+          "bindto": "Example_Time"
+
+        },
+        {
+          "text": "TextArea",
+          "value": "",
+          "type": "TextArea",
+          "bindto": "Example_Text"
+        }
+      ]
+    },
+    {
+      "header": "Rectangular Area",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Area",
+          "value": "",
+          "type": "ScreenAreaManager",
+          "width": 320,
+          "height": 240,
+          "help": "Draw a rectangular area. Drag out to remove",
+          "bindto": "Example_Area",
+          "max": 3
+        }
+      ]
+    },
+    {
+      "header": "Freeform Area",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Area",
+          "value": "",
+          "type": "ZoneManager",
+          "bindto": "Example_Zone",
+          "hasZones": true,
+          "help": "Draw an area. Left click to draw, right click to erase"
+        }
+      ]
+    },
+    {
+      "header": "Trip Wires",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Trip Wires",
+          "value": "",
+          "type": "LineManager",
+          "max": 10,
+          "bindto": "Example_Trip_Wires",
+          "help": "Click and drag to draw lines, drag a point out to remove",
+          "overlay": true
+        }
+      ]
+    },
+    {
+      "header": "Spectrum Analyser",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Spectrum Analyser",
+          "value": "",
+          "type": "SpectrumAnalyser",
+          "width": 320,
+          "height": 240
+        }
+      ]
     }
   ]
 }

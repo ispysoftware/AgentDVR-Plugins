@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -10,32 +11,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Plugins
 {
-    class Utils
+    public class Utils
     {
-        public static string ResourcePath = "Plugins.";
         public static Exception LastException { get; set; }
-        public static string Json(string languageCode)
-        {
-            var json = LoadResource("json.config_" + languageCode + ".json");
-            if (string.IsNullOrEmpty(json))
-                json = LoadResource("json.config_en.json");
-            json = json.Replace("VERSION", "v"+typeof(Utils).Assembly.GetName().Version);
-            return json;
-
-        }
-        private static configuration _configObject;
-        public static configuration ConfigObject
-        {
-            get
-            {
-                if (_configObject != null)
-                    return _configObject;
-
-                _configObject = new configuration();
-                return _configObject;
-            }
-
-        }
 
         public static bool TaskRunning(Task t)
         {
@@ -57,26 +35,6 @@ namespace Plugins
             {
                 return true;
             }
-        }
-
-        public static string LoadResource(string resourceName)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            resourceName = ResourcePath + resourceName;
-            if (!assembly.GetManifestResourceNames().Contains(resourceName))
-                return "";
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream != null)
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        return reader.ReadToEnd();
-                    }
-                }
-            }
-            return "";
         }
 
         public static dynamic PopulateResponse(string resp, object o)
@@ -321,6 +279,60 @@ namespace Plugins
             }
         }
 
+        public static Rectangle[] ImageZones(string zoneMap, Size imageSize)
+        {
+            if (zoneMap.Length > 0)
+            {
+                double wmulti = Convert.ToDouble(imageSize.Width) / Convert.ToDouble(100);
+                double hmulti = Convert.ToDouble(imageSize.Height) / Convert.ToDouble(100);
+
+                var l = new List<Rectangle>();
+                int x = 0, y = 0;
+                var p = 5d;
+                int ylim = 48;
+
+                double pcx = (p / 320d) * 100d;
+                double pcy = (p / 240d) * 100d;
+                int rx = Convert.ToInt32(pcx * wmulti);
+                int ry = Convert.ToInt32(pcy * hmulti);
+                foreach (var c in zoneMap)
+                {
+                    if (c != '0')
+                    {
+                        l.Add(new Rectangle(Convert.ToInt32(x * pcx * wmulti), Convert.ToInt32(y * pcy * hmulti), rx, ry));
+                    }
+                    y++;
+                    if (y == ylim)
+                    {
+                        x++;
+                        y = 0;
+                    }
+                }
+                return l.ToArray();
+            }
+
+            return new[] { new Rectangle(0, 0, imageSize.Width, imageSize.Height) };
+        }
+
+        //given a zone map, image size and point return zone at the location
+        public static char GetZone(Point p, Size imageSize, string zoneMap)
+        {
+            if (imageSize.Width > 0 && imageSize.Height > 0)
+            {
+                var x = Convert.ToInt32(Math.Floor((Convert.ToDouble(p.X) / imageSize.Width) * 64d));
+                var y = Convert.ToInt32(Math.Floor((Convert.ToDouble(p.Y) / imageSize.Height) * 48d));
+                int ind = Convert.ToInt32(x * 48d + y);
+                //convert p to index in zonemap
+                if (ind <= zoneMap.Length)
+                {
+                    return zoneMap[ind];
+                }
+
+            }
+            return '0';
+
+        }
+
         static void SetPropValue(object src, string propName, object propValue)
         {
             object currentObject = src;
@@ -332,6 +344,8 @@ namespace Plugins
                 currentObject = currentObject.GetType().GetProperty(fieldName).GetValue(currentObject, null);
             }
             var val = currentObject.GetType().GetProperty(fieldNames[fieldNames.Length - 1]);
+            if (val == null) return; //support example json with no bindings
+
             var t = val.PropertyType.Name;
             switch (t)
             {

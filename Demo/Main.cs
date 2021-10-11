@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 
@@ -18,6 +19,19 @@ namespace Plugins
         public Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        private configuration _configObject;
+        public configuration ConfigObject
+        {
+            get
+            {
+                if (_configObject != null)
+                    return _configObject;
+
+                _configObject = new configuration();
+                return _configObject;
+            }
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -47,7 +61,7 @@ namespace Plugins
 
         private void CheckAlert()
         {
-            if (Utils.ConfigObject.AlertsEnabled)
+            if (ConfigObject.AlertsEnabled)
             {
                 if (_lastAlert < DateTime.UtcNow.AddSeconds(-10))
                 {
@@ -83,11 +97,11 @@ namespace Plugins
         {
             //22050, one channel
             CheckAlert();
-            if (!Utils.ConfigObject.AudioEnabled)
+            if (!ConfigObject.AudioEnabled)
                 return rawData;
 
             //demo audio effect
-            return adjustVolume(rawData, Convert.ToDouble(Utils.ConfigObject.Volume) / 100d);
+            return adjustVolume(rawData, Convert.ToDouble(ConfigObject.Volume) / 100d);
         }
 
         private byte[] adjustVolume(byte[] audioSamples, double volume)
@@ -183,7 +197,8 @@ namespace Plugins
         public string GetConfiguration(string languageCode)
         {
             //populate json
-            dynamic d = Utils.PopulateResponse(Utils.Json(languageCode), Utils.ConfigObject);
+            var json = ResourceLoader.LoadJson(languageCode);
+            dynamic d = Utils.PopulateResponse(json, ConfigObject);
             return JsonConvert.SerializeObject(d);
         }
 
@@ -193,7 +208,7 @@ namespace Plugins
             try
             {
                 dynamic d = JsonConvert.DeserializeObject(json);
-                Utils.PopulateObject(d, Utils.ConfigObject);
+                Utils.PopulateObject(d, ConfigObject);
             }
             catch (Exception ex)
             {
@@ -227,17 +242,17 @@ namespace Plugins
         {
             CheckAlert();
             //process frame here
-            if (!Utils.ConfigObject.VideoEnabled)
+            if (!ConfigObject.VideoEnabled)
                 return;
 
             //demo mirror effect
-            var bWidth = sz.Width / Utils.ConfigObject.Size;
+            var bWidth = sz.Width / ConfigObject.Size;
             unsafe {
                 byte* ptr = (byte*)frame;
                 
                 for (var y = 0; y < sz.Height; y++)
                 {
-                    for (var b = 0; b < Utils.ConfigObject.Size; b++)
+                    for (var b = 0; b < ConfigObject.Size; b++)
                     {
                         int xStart = b * bWidth, xEnd = Math.Min(sz.Width,(b + 1) * bWidth);
                         int j = 0;
@@ -257,9 +272,9 @@ namespace Plugins
             get
             {
                 var t = "";
-                if (Utils.ConfigObject.SupportsAudio)
+                if (ConfigObject.SupportsAudio)
                     t += "audio,";
-                if (Utils.ConfigObject.SupportsVideo)
+                if (ConfigObject.SupportsVideo)
                     t += "video";
 
                 return t.Trim(',');

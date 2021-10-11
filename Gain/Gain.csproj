@@ -26,19 +26,16 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PluginShared\PluginShared.csproj" />
+  </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>if EXIST "D:\Projects\agent-service\AgentService\Plugins\Gain\" (
-    xcopy "*.*" "D:\Projects\agent-service\AgentService\Plugins\Gain\" /F /R /Y /I
-)</PostBuildEvent>
     <Version>1.1.1</Version>
     <AssemblyVersion>1.1.1.0</AssemblyVersion>
     <FileVersion>1.1.1.0</FileVersion>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Gain\&quot; (&#xD;&#xA;    xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Gain\&quot; /F /R /Y /I&#xD;&#xA;)" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

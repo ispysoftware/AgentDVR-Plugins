@@ -22,7 +22,18 @@ namespace Plugins
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
+        private configuration _configObject;
+        public configuration ConfigObject
+        {
+            get
+            {
+                if (_configObject != null)
+                    return _configObject;
 
+                _configObject = new configuration();
+                return _configObject;
+            }
+        }
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             AssemblyName assemblyName = new AssemblyName(args.Name);
@@ -104,7 +115,7 @@ namespace Plugins
         public string GetConfiguration(string languageCode)
         {
             //populate json
-            dynamic d = Utils.PopulateResponse(Utils.Json(languageCode), Utils.ConfigObject);
+            dynamic d = Utils.PopulateResponse(ResourceLoader.LoadJson(languageCode), ConfigObject);
             return JsonConvert.SerializeObject(d);
         }
 
@@ -114,7 +125,7 @@ namespace Plugins
             try
             {
                 dynamic d = JsonConvert.DeserializeObject(json);
-                Utils.PopulateObject(d, Utils.ConfigObject);
+                Utils.PopulateObject(d, ConfigObject);
             }
             catch (Exception ex)
             {
@@ -147,13 +158,13 @@ namespace Plugins
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
         {
             //process frame here
-            if (!Utils.ConfigObject.VideoEnabled || channels!=3)
+            if (!ConfigObject.VideoEnabled || channels!=3)
                 return;
 
             if (Utils.TaskRunning(_processor))
                 return;
 
-            if (_lastScan > DateTime.UtcNow.AddMilliseconds(0 - Utils.ConfigObject.Interval))
+            if (_lastScan > DateTime.UtcNow.AddMilliseconds(0 - ConfigObject.Interval))
                 return;
 
             _lastScan = DateTime.UtcNow;
@@ -171,68 +182,68 @@ namespace Plugins
             var hints = new Dictionary<DecodeHintType, object>();
             var fmts = new List<BarcodeFormat>();
 
-            if (Utils.ConfigObject.AZTEC)
+            if (ConfigObject.AZTEC)
                 fmts.Add(BarcodeFormat.AZTEC);
 
-            if (Utils.ConfigObject.CODABAR)
+            if (ConfigObject.CODABAR)
                 fmts.Add(BarcodeFormat.CODABAR);
 
            
-            if (Utils.ConfigObject.CODE_128)
+            if (ConfigObject.CODE_128)
                 fmts.Add(BarcodeFormat.CODE_128);
 
-            if (Utils.ConfigObject.CODE_39)
+            if (ConfigObject.CODE_39)
                 fmts.Add(BarcodeFormat.CODE_39);
 
-            if (Utils.ConfigObject.CODE_93)
+            if (ConfigObject.CODE_93)
                 fmts.Add(BarcodeFormat.CODE_93);
 
-            if (Utils.ConfigObject.DATA_MATRIX)
+            if (ConfigObject.DATA_MATRIX)
                 fmts.Add(BarcodeFormat.DATA_MATRIX);
 
-            if (Utils.ConfigObject.EAN_13)
+            if (ConfigObject.EAN_13)
                 fmts.Add(BarcodeFormat.EAN_13);
 
-            if (Utils.ConfigObject.EAN_8)
+            if (ConfigObject.EAN_8)
                 fmts.Add(BarcodeFormat.EAN_8);
 
-            if (Utils.ConfigObject.IMB)
+            if (ConfigObject.IMB)
                 fmts.Add(BarcodeFormat.IMB);
 
-            if (Utils.ConfigObject.MAXICODE)
+            if (ConfigObject.MAXICODE)
                 fmts.Add(BarcodeFormat.MAXICODE);
 
-            if (Utils.ConfigObject.MSI)
+            if (ConfigObject.MSI)
                 fmts.Add(BarcodeFormat.MSI);
 
-            if (Utils.ConfigObject.PDF_417)
+            if (ConfigObject.PDF_417)
                 fmts.Add(BarcodeFormat.PDF_417);
 
-            if (Utils.ConfigObject.PHARMACODE)
+            if (ConfigObject.PHARMACODE)
                 fmts.Add(BarcodeFormat.PHARMA_CODE);
 
-            if (Utils.ConfigObject.PLESSEY)
+            if (ConfigObject.PLESSEY)
                 fmts.Add(BarcodeFormat.PLESSEY);
 
-            if (Utils.ConfigObject.QR_CODE)
+            if (ConfigObject.QR_CODE)
                 fmts.Add(BarcodeFormat.QR_CODE);
 
-            if (Utils.ConfigObject.RSS_14)
+            if (ConfigObject.RSS_14)
                 fmts.Add(BarcodeFormat.RSS_14);
 
-            if (Utils.ConfigObject.RSS_Expanded)
+            if (ConfigObject.RSS_Expanded)
                 fmts.Add(BarcodeFormat.RSS_EXPANDED);
 
-            if (Utils.ConfigObject.UPC_A)
+            if (ConfigObject.UPC_A)
                 fmts.Add(BarcodeFormat.UPC_A);
 
-            if (Utils.ConfigObject.UPC_E)
+            if (ConfigObject.UPC_E)
                 fmts.Add(BarcodeFormat.UPC_E);
 
-            if (Utils.ConfigObject.UPC_EAN_Extension)
+            if (ConfigObject.UPC_EAN_Extension)
                 fmts.Add(BarcodeFormat.UPC_EAN_EXTENSION);
 
-            if (Utils.ConfigObject.Intensive)
+            if (ConfigObject.Intensive)
                 hints.Add(DecodeHintType.TRY_HARDER, true);
 
             hints.Add(DecodeHintType.POSSIBLE_FORMATS, fmts);
@@ -269,9 +280,9 @@ namespace Plugins
             get
             {
                 var t = "";
-                if (Utils.ConfigObject.SupportsAudio)
+                if (ConfigObject.SupportsAudio)
                     t += "audio,";
-                if (Utils.ConfigObject.SupportsVideo)
+                if (ConfigObject.SupportsVideo)
                     t += "video";
 
                 return t.Trim(',');
