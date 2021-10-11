@@ -1,9 +1,9 @@
 ﻿{
     "header": "Gain",
-    "okResult": "UploadJSON",//do not change
-    "name": "EditPluginConfiguration",//do not change
-    "origin": "Plugin",//do not change
-    "version": "VERSION",//do not change 
+    "okResult": "UploadJSON",
+    "name": "EditPluginConfiguration",
+    "origin": "Plugin",
+    "version": "VERSION",
     "sections": [
         {
             "header": "Audio Gain",
