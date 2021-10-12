@@ -28,11 +28,13 @@ public partial class configuration {
     
     private bool supportsVideoField;
     
-    private bool audioEnabledField;
+    private bool volumeEnabledField;
     
-    private bool videoEnabledField;
+    private bool mirrorEnabledField;
     
     private bool alertsEnabledField;
+    
+    private bool graphicsEnabledField;
     
     private int volumeField;
     
@@ -66,6 +68,8 @@ public partial class configuration {
     
     private int example_TimeField;
     
+    private string example_DateField;
+    
     private string example_TextField;
     
     private string example_AreaField;
@@ -77,9 +81,10 @@ public partial class configuration {
     public configuration() {
         this.supportsAudioField = true;
         this.supportsVideoField = true;
-        this.audioEnabledField = true;
-        this.videoEnabledField = true;
+        this.volumeEnabledField = true;
+        this.mirrorEnabledField = true;
         this.alertsEnabledField = true;
+        this.graphicsEnabledField = true;
         this.volumeField = 100;
         this.sizeField = 1;
         this.example_StringField = "abc123";
@@ -96,6 +101,7 @@ public partial class configuration {
         this.example_Int32Field = 20;
         this.example_ColorField = "#ff0000";
         this.example_TimeField = 1026;
+        this.example_DateField = "";
         this.example_TextField = "Any text content";
         this.example_AreaField = "";
         this.example_ZoneField = "111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
@@ -161,22 +167,22 @@ public partial class configuration {
     }
     
     /// <remarks/>
-    public bool AudioEnabled {
+    public bool VolumeEnabled {
         get {
-            return this.audioEnabledField;
+            return this.volumeEnabledField;
         }
         set {
-            this.audioEnabledField = value;
+            this.volumeEnabledField = value;
         }
     }
     
     /// <remarks/>
-    public bool VideoEnabled {
+    public bool MirrorEnabled {
         get {
-            return this.videoEnabledField;
+            return this.mirrorEnabledField;
         }
         set {
-            this.videoEnabledField = value;
+            this.mirrorEnabledField = value;
         }
     }
     
@@ -187,6 +193,16 @@ public partial class configuration {
         }
         set {
             this.alertsEnabledField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public bool GraphicsEnabled {
+        get {
+            return this.graphicsEnabledField;
+        }
+        set {
+            this.graphicsEnabledField = value;
         }
     }
     
@@ -347,6 +363,16 @@ public partial class configuration {
         }
         set {
             this.example_TimeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string Example_Date {
+        get {
+            return this.example_DateField;
+        }
+        set {
+            this.example_DateField = value;
         }
     }
     

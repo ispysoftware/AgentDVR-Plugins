@@ -24,14 +24,6 @@ using System.Xml.Serialization;
 [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
 public partial class configuration {
     
-    private bool supportsAudioField;
-    
-    private bool supportsVideoField;
-    
-    private bool audioEnabledField;
-    
-    private bool videoEnabledField;
-    
     private int intervalField;
     
     private bool intensiveField;
@@ -79,73 +71,29 @@ public partial class configuration {
     private bool uPC_EAN_ExtensionField;
     
     public configuration() {
-        this.supportsAudioField = false;
-        this.supportsVideoField = true;
-        this.audioEnabledField = false;
-        this.videoEnabledField = true;
         this.intervalField = 1000;
-        this.intensiveField = false;
-        this.aZTECField = true;
-        this.cODABARField = true;
-        this.cODE_128Field = true;
-        this.cODE_39Field = true;
-        this.cODE_93Field = true;
-        this.dATA_MATRIXField = true;
+        this.intensiveField = true;
+        this.aZTECField = false;
+        this.cODABARField = false;
+        this.cODE_128Field = false;
+        this.cODE_39Field = false;
+        this.cODE_93Field = false;
+        this.dATA_MATRIXField = false;
         this.eAN_13Field = true;
         this.eAN_8Field = true;
-        this.iMBField = true;
-        this.iTFField = true;
-        this.mAXICODEField = true;
-        this.mSIField = true;
-        this.pDF_417Field = true;
-        this.pHARMACODEField = true;
-        this.pLESSEYField = true;
+        this.iMBField = false;
+        this.iTFField = false;
+        this.mAXICODEField = false;
+        this.mSIField = false;
+        this.pDF_417Field = false;
+        this.pHARMACODEField = false;
+        this.pLESSEYField = false;
         this.qR_CODEField = true;
-        this.rSS_14Field = true;
-        this.rSS_ExpandedField = true;
+        this.rSS_14Field = false;
+        this.rSS_ExpandedField = false;
         this.uPC_AField = true;
         this.uPC_EField = true;
-        this.uPC_EAN_ExtensionField = true;
-    }
-    
-    /// <remarks/>
-    public bool SupportsAudio {
-        get {
-            return this.supportsAudioField;
-        }
-        set {
-            this.supportsAudioField = value;
-        }
-    }
-    
-    /// <remarks/>
-    public bool SupportsVideo {
-        get {
-            return this.supportsVideoField;
-        }
-        set {
-            this.supportsVideoField = value;
-        }
-    }
-    
-    /// <remarks/>
-    public bool AudioEnabled {
-        get {
-            return this.audioEnabledField;
-        }
-        set {
-            this.audioEnabledField = value;
-        }
-    }
-    
-    /// <remarks/>
-    public bool VideoEnabled {
-        get {
-            return this.videoEnabledField;
-        }
-        set {
-            this.videoEnabledField = value;
-        }
+        this.uPC_EAN_ExtensionField = false;
     }
     
     /// <remarks/>

@@ -2,17 +2,29 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Plugins
+namespace PluginShared
 {
     public class Utils
     {
+        public struct ResultInfo
+        {
+            public string EventName;
+            public string MSG;
+            public string AIJSON;
+            public ResultInfo(string eventName, string msg = "", string aijson = "")
+            {
+                EventName = eventName;
+                MSG = msg;
+                AIJSON = aijson;
+            }
+        }
+
         public static Exception LastException { get; set; }
 
         public static bool TaskRunning(Task t)

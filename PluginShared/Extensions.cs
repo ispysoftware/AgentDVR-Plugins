@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Plugins
+namespace PluginShared
 {
     public static class Extensions
     {

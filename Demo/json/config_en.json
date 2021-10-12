@@ -26,10 +26,10 @@
           "type": "Header"
         },
         {
-          "text": "Enabled",
+          "text": "Mirror Enabled",
           "value": false,
           "type": "Boolean",
-          "bindto": "VideoEnabled",
+          "bindto": "MirrorEnabled",
           "live": true,
           "help": "Applies a mirror effect to the video"
         },
@@ -44,6 +44,18 @@
           "live": true
         },
         {
+          "text": "Graphics Effect",
+          "type": "Header"
+        },
+        {
+          "text": "Graphics Enabled",
+          "value": false,
+          "type": "Boolean",
+          "bindto": "GraphicsEnabled",
+          "live": true,
+          "help": "Draws a bouncing red square on top of the video"
+        },
+        {
           "text": "Volume Effect",
           "type": "Header"
         },
@@ -51,7 +63,7 @@
           "text": "Enabled",
           "value": false,
           "type": "Boolean",
-          "bindto": "AudioEnabled",
+          "bindto": "VolumeEnabled",
           "live": true
         },
         {
@@ -195,7 +207,12 @@
           "unit": "min",
           "step": "60",
           "bindto": "Example_Time"
-
+        },
+        {
+          "text": "Date",
+          "value": "",
+          "type": "Date",
+          "bindto": "Example_Date"
         },
         {
           "text": "TextArea",

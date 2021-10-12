@@ -3,10 +3,6 @@
   <xs:element name="configuration">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="SupportsAudio" type="xs:boolean" default="false"/>
-        <xs:element name="SupportsVideo" type="xs:boolean" default="true" />
-        <xs:element name="AudioEnabled" type="xs:boolean" default="false"/>
-        <xs:element name="VideoEnabled" type="xs:boolean" default="true"/>
         <xs:element name="Interval" type="xs:int" default="1000"/>
         <xs:element name="Intensive" type="xs:boolean" default="true"/>
 

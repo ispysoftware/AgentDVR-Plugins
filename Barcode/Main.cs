@@ -7,12 +7,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PluginShared;
 using ZXing;
 using ZXing.Common;
 
 namespace Plugins
 {
-    public class Main : IDisposable
+    public class Main : PluginBase, IAgentPluginCamera
     {
         private bool _disposed;
         private List<string> loadedAssemblies = new List<string>();
@@ -57,59 +58,6 @@ namespace Plugins
             }
 
             return null;
-        }
-
-
-        public string AppPath
-        {
-            get;
-            set;
-        }
-
-        public string AppDataPath
-        {
-            get;
-            set;
-        }
-
-        public string ObjectName
-        {
-            get;
-            set;
-        }
-
-        private string _result = "";
-        public string Result
-        {
-            get
-            {
-                string r = _result;
-                _result = "";
-                return r;
-            }
-            set { _result = value; }
-        }
-
-        public string Command(string command)
-        {
-            switch (command)
-            {
-                case "sayhello":
-                    //do stuff here
-                    return "{\"type\":\"success\",\"msg\":\"Hello from the Plugin!\"}";
-            }
-
-            return "{\"type\":\"error\",\"msg\":\"Command not recognised\"}";
-        }
-
-        public Exception LastException
-        {
-            get
-            {
-                var ex = Utils.LastException;
-                Utils.LastException = null;
-                return ex;
-            }
         }
 
         public string GetConfiguration(string languageCode)
@@ -157,8 +105,7 @@ namespace Plugins
         private Task _processor;
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
         {
-            //process frame here
-            if (!ConfigObject.VideoEnabled || channels!=3)
+            if (channels!=3)
                 return;
 
             if (Utils.TaskRunning(_processor))
@@ -270,22 +217,21 @@ namespace Plugins
             {
                 if (!String.IsNullOrEmpty(rawResult.Text))
                 {
-                    _result = rawResult.Text;
+                    Results.Add(new Utils.ResultInfo("Barcode Recognized", rawResult.Text));
                 }
             }
+        }
+
+        public override List<string> GetCustomEvents()
+        {
+            return new List<string> { "Barcode Recognized" };
         }
 
         public string Supports
         {
             get
             {
-                var t = "";
-                if (ConfigObject.SupportsAudio)
-                    t += "audio,";
-                if (ConfigObject.SupportsVideo)
-                    t += "video";
-
-                return t.Trim(',');
+                return "video";
             }
         }
 

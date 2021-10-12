@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
+using PluginShared;
+using static PluginShared.Utils;
 
 namespace Plugins
 {
-    public class Main : IDisposable
+    public class Main : PluginBase, IAgentPluginCamera, IAgentPluginMicrophone
     {
         private bool _disposed;
         private List<string> loadedAssemblies = new List<string>();
         private DateTime _lastAlert = DateTime.UtcNow;
-        private string _cameraName, _microphoneName;
-        private int _cameraID, _microphoneID, _localPort;
+        
 
         public Main()
         {
@@ -22,7 +22,7 @@ namespace Plugins
         }
 
         private configuration _configObject;
-        public configuration ConfigObject
+        private configuration ConfigObject
         {
             get
             {
@@ -66,12 +66,12 @@ namespace Plugins
                 if (_lastAlert < DateTime.UtcNow.AddSeconds(-10))
                 {
                     _lastAlert = DateTime.UtcNow;
-                    _result = "alert";
+                    Results.Add(new ResultInfo("alert", "", ""));
                 }
             }
         }
 
-        public string ProcessEvent(string ev)
+        public override void ProcessAgentEvent(string ev)
         {
             switch(ev)
             {
@@ -84,20 +84,19 @@ namespace Plugins
                 case "RecordingStart":
                     break;
                 case "RecordingStop":
-                    return "tagged by the demo plugin";
+                    break;
                 case "AudioAlert":
                     break;
                 case "AudioDetect":
                     break;
             }
-            return "";
         }
 
         public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
         {
             //22050, one channel
             CheckAlert();
-            if (!ConfigObject.AudioEnabled)
+            if (!ConfigObject.VolumeEnabled)
                 return rawData;
 
             //demo audio effect
@@ -126,73 +125,12 @@ namespace Plugins
             }
             return array;
         }
+        
 
-        public string AppPath
+        public override List<string> GetCustomEvents()
         {
-            get;
-            set;
-        }
-
-        public string AppDataPath
-        {
-            get;
-            set;
-        }
-
-        public string ObjectName
-        {
-            get;
-            set;
-        }
-
-        private string _result = "";
-        public string Result
-        {
-            get
-            {
-                //return "alert" or "detected" or some other text to trigger the pluginEvent action
-                string r = _result;
-                _result = ""; //reset
-                return r;
-            }
-            set { _result = value; }
-        }
-
-        public void SetCameraInfo(string name, int objectID, int localPort)
-        {
-            _cameraName = name;
-            _cameraID = objectID;
-            _localPort = localPort;
-        }
-
-        public void SetMicrophoneInfo(string name, int objectID, int localPort)
-        {
-            _microphoneName = name;
-            _microphoneID = objectID;
-            _localPort = localPort;
-        }
-
-        public string Command(string command)
-        {
-            switch (command)
-            {
-                case "sayhello":
-                    //do stuff here
-                    return "{\"type\":\"success\",\"msg\":\"Hello from the Plugin!\"}";
-            }
-
-            return "{\"type\":\"error\",\"msg\":\"Command not recognised\"}";
-        }
-
-        public Exception LastException
-        {
-            get
-            {
-                var ex = Utils.LastException;
-                Utils.LastException = null;
-                return ex;
-            }
-        }
+            return new List<string>() { "Graphics Bounce", "Sound Detected" };
+        }       
 
         public string GetConfiguration(string languageCode)
         {
@@ -242,28 +180,72 @@ namespace Plugins
         {
             CheckAlert();
             //process frame here
-            if (!ConfigObject.VideoEnabled)
-                return;
+            if (ConfigObject.MirrorEnabled)
+            {
 
-            //demo mirror effect
-            var bWidth = sz.Width / ConfigObject.Size;
-            unsafe {
-                byte* ptr = (byte*)frame;
-                
-                for (var y = 0; y < sz.Height; y++)
+                //demo mirror effect
+                var bWidth = sz.Width / ConfigObject.Size;
+                unsafe
                 {
-                    for (var b = 0; b < ConfigObject.Size; b++)
-                    {
-                        int xStart = b * bWidth, xEnd = Math.Min(sz.Width,(b + 1) * bWidth);
-                        int j = 0;
-                        for (var x = xStart; x < xEnd; x++)
-                        {
-                            for (int c = 0; c < channels; c++)
-                                ptr[y * stride + (x * channels) + c] = ptr[y * stride + (xEnd-x) * channels + c];
+                    byte* ptr = (byte*)frame;
 
+                    for (var y = 0; y < sz.Height; y++)
+                    {
+                        for (var b = 0; b < ConfigObject.Size; b++)
+                        {
+                            int xStart = b * bWidth, xEnd = Math.Min(sz.Width, (b + 1) * bWidth);
+                            int j = 0;
+                            for (var x = xStart; x < xEnd; x++)
+                            {
+                                for (int c = 0; c < channels; c++)
+                                    ptr[y * stride + (x * channels) + c] = ptr[y * stride + (xEnd - x) * channels + c];
+
+                            }
                         }
                     }
                 }
+            }
+
+            if (ConfigObject.GraphicsEnabled)
+            {
+                //draw something on the frame
+                using (var img = new Bitmap(sz.Width, sz.Height, stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, frame))
+                {
+                    using (Graphics g = Graphics.FromImage(img))
+                    {
+                        g.FillRectangle(Brushes.Red, new Rectangle(recLoc, new Size(recSize, recSize)));
+                    }
+                }
+                MoveRec(sz.Width,sz.Height);
+            }
+        }
+
+        private Point recLoc = new Point(10, 10);
+        private int recSize = 40;
+        private int speed = 5;
+        private int XBounce = 1;
+        private int YBounce = -1;
+
+        private void MoveRec(int width, int height)
+        {
+            if ((recLoc.X >= 0) && (recLoc.X + recSize <= width)) //Within X Bounds
+            {
+                recLoc.X -= XBounce * speed;
+            }
+            else
+            {
+                XBounce = -XBounce;
+                recLoc.X -= XBounce * recSize / 2;
+            }
+
+            if ((recLoc.Y >= 0) && (recLoc.Y + recSize <= height)) //Within Y Bounds
+            {
+                recLoc.Y -= YBounce * speed;
+            }
+            else
+            {
+                YBounce = -YBounce;
+                recLoc.Y -= YBounce * recSize / 2;
             }
         }
 
@@ -271,20 +253,13 @@ namespace Plugins
         {
             get
             {
-                var t = "";
-                if (ConfigObject.SupportsAudio)
-                    t += "audio,";
-                if (ConfigObject.SupportsVideo)
-                    t += "video";
-
-                return t.Trim(',');
+                return "video,audio";
             }
         }
 
         // Use C# destructor syntax for finalization code.
         ~Main()
         {
-            // Simply call Dispose(false).
             Dispose(false);
         }
     }

@@ -4,16 +4,17 @@ using System.IO;
 using System.Reflection;
 using NAudio.Dsp;
 using Newtonsoft.Json;
+using PluginShared;
 
 namespace Plugins
 {
-    public class Main : IDisposable
+    public class Main : PluginBase, IAgentPluginMicrophone
     {
         private bool _disposed;
         private EqualizerBand[] _bands;
         private BiQuadFilter[,] _filters = null;
         private bool _update = true;
-        private List<string> loadedAssemblies = new List<string>();
+        private readonly List<string> loadedAssemblies = new List<string>();
 
         public Main()
         {
@@ -147,58 +148,8 @@ namespace Plugins
             return pcm;
         }
 
-        public string AppPath
-        {
-            get;
-            set;
-        }
-
-        public string AppDataPath
-        {
-            get;
-            set;
-        }
-
-        public string ObjectName
-        {
-            get;
-            set;
-        }
-
-        public string Result
-        {
-            get
-            {
-                //return "alert" or "detected" or some other text to trigger the pluginEvent action
-                return "";
-            }
-        }
-
-        public string Command(string command)
-        {
-            switch (command)
-            {
-                case "sayhello":
-                    //do stuff here
-                    return "{\"type\":\"success\",\"msg\":\"Hello from the Plugin!\"}";
-            }
-
-            return "{\"type\":\"error\",\"msg\":\"Command not recognised\"}";
-        }
-
-        public Exception LastException
-        {
-            get
-            {
-                var ex = Utils.LastException;
-                Utils.LastException = null;
-                return ex;
-            }
-        }
-
         public string GetConfiguration(string languageCode)
         {
-            //populate json
             dynamic d = Utils.PopulateResponse(ResourceLoader.LoadJson(languageCode), ConfigObject);
             return JsonConvert.SerializeObject(d);
         }

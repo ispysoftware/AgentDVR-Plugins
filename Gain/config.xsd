@@ -3,8 +3,6 @@
   <xs:element name="configuration">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="SupportsAudio" type="xs:boolean" default="true"/>
-        <xs:element name="SupportsVideo" type="xs:boolean" default="false" />
         <xs:element name="band1" type="xs:int" default="0"/>
         <xs:element name="band2" type="xs:int" default="0"/>
         <xs:element name="band3" type="xs:int" default="0"/>
