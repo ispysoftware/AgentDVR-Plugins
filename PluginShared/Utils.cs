@@ -297,6 +297,47 @@ namespace PluginShared
                 }
             }
         }
+        private struct Points
+        {
+            public float x, y, x2, y2;
+        }
+
+        private struct Areas
+        {
+            public float x, y, w, h;
+        }
+        public static List<Line2D> ParseTripWires(Size frameSize, string json)
+        {
+            var tripWireList = new List<Line2D>();
+            var lp = JsonConvert.DeserializeObject<List<Points>>(json);
+            foreach (var p in lp)
+            {
+                tripWireList.Add(new Line2D(frameSize, new Point(Convert.ToInt32(p.x), Convert.ToInt32(p.y)), new Point(Convert.ToInt32(p.x2), Convert.ToInt32(p.y2))));
+            }
+            return tripWireList;
+        }
+
+        public static List<Rectangle> ParseAreas(Size frameSize, string json)
+        {
+            var areaList = new List<Rectangle>();
+            var lp = JsonConvert.DeserializeObject<List<Areas>>(json);
+            foreach (var p in lp)
+            {
+
+                var start = ScalePercentToFrame(new Point(Convert.ToInt32(p.x), Convert.ToInt32(p.y)), frameSize);
+                var sz = ScalePercentToFrame(new Point(Convert.ToInt32(p.w), Convert.ToInt32(p.h)), frameSize);
+                areaList.Add(new Rectangle(start, new Size(sz.X, sz.Y)));
+            }
+            return areaList;
+        }
+
+        internal static Point ScalePercentToFrame(Point p, Size sz)
+        {
+            var x = (p.X / 100d) * sz.Width;
+            var y = (p.Y / 100d) * sz.Height;
+
+            return new Point(Convert.ToInt16(x), Convert.ToInt16(y));
+        }
 
         public static Rectangle[] ImageZones(string zoneMap, Size imageSize)
         {

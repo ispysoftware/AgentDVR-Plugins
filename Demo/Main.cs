@@ -55,6 +55,7 @@ namespace Plugins
                 case "ManualAlert":
                     break;
                 case "RecordingStart":
+                    //this will tag new recordings with "Demo plugin attached"
                     Results.Add(new ResultInfo("tag", "", "Demo plugin attached"));
                     break;
                 case "RecordingStop":
@@ -131,8 +132,9 @@ namespace Plugins
 
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
         {
+            //fire off an alert every 10 seconds
             CheckAlert();
-            //process frame here
+
             if (ConfigObject.MirrorEnabled)
             {
 
@@ -167,9 +169,31 @@ namespace Plugins
                     using (Graphics g = Graphics.FromImage(img))
                     {
                         g.FillRectangle(Brushes.Red, new Rectangle(recLoc, new Size(recSize, recSize)));
+
+                        //draw trip wires if defined
+                        if (!string.IsNullOrEmpty(ConfigObject.Example_Trip_Wires))
+                        {
+                            var lines = Utils.ParseTripWires(sz, ConfigObject.Example_Trip_Wires);
+                            foreach(var line in lines)
+                            {
+                                g.DrawLine(Pens.Red, line.InitialPoint, line.TerminalPoint);
+                            }
+                        }
+                        //draw rectangles if defined
+                        if (!string.IsNullOrEmpty(ConfigObject.Example_Area))
+                        {
+                            var areas = Utils.ParseAreas(sz, ConfigObject.Example_Area);
+                            foreach (var area in areas)
+                            {
+                                g.FillRectangle(Brushes.Aqua, area);
+                            }
+                        }
                     }
                 }
                 MoveRec(sz.Width,sz.Height);
+
+                
+                
             }
         }
 
