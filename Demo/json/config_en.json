@@ -53,7 +53,7 @@
           "type": "Boolean",
           "bindto": "GraphicsEnabled",
           "live": true,
-          "help": "Draws a bouncing red square on top of the video"
+          "help": "Draws a bouncing red square on top of the video. Generates a 'Rectangle Bounce' event you can add actions to under Actions in main camera config"
         },
         {
           "text": "Volume Effect",
