@@ -11,8 +11,6 @@ namespace Plugins
 {
     public class Main : PluginBase, IAgentPluginCamera, IAgentPluginMicrophone
     {
-        private bool _disposed;
-        private List<string> loadedAssemblies = new List<string>();
         private DateTime _lastAlert = DateTime.UtcNow;
         
 
@@ -33,32 +31,7 @@ namespace Plugins
                 return _configObject;
             }
         }
-
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            AssemblyName assemblyName = new AssemblyName(args.Name);
-            string curAssemblyFolder = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-
-            DirectoryInfo directoryInfo = new DirectoryInfo(curAssemblyFolder);
-
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
-            {
-                string fileNameWithoutExt = fileInfo.Name.Replace(fileInfo.Extension, "");
-
-                if (assemblyName.Name.ToUpperInvariant() == fileNameWithoutExt.ToUpperInvariant())
-                {
-                    //prevent stack overflow
-                    if (!loadedAssemblies.Contains(fileInfo.FullName))
-                    {
-                        loadedAssemblies.Add(fileInfo.FullName);
-                        return Assembly.Load(AssemblyName.GetAssemblyName(fileInfo.FullName));
-                    }
-                }
-            }
-
-            return null;
-        }
-
+                
         private void CheckAlert()
         {
             if (ConfigObject.AlertsEnabled)
@@ -66,7 +39,7 @@ namespace Plugins
                 if (_lastAlert < DateTime.UtcNow.AddSeconds(-10))
                 {
                     _lastAlert = DateTime.UtcNow;
-                    Results.Add(new ResultInfo("alert", "", ""));
+                    Results.Add(new ResultInfo("alert"));
                 }
             }
         }
@@ -82,6 +55,7 @@ namespace Plugins
                 case "ManualAlert":
                     break;
                 case "RecordingStart":
+                    Results.Add(new ResultInfo("tag", "", "Demo plugin attached"));
                     break;
                 case "RecordingStop":
                     break;
@@ -129,7 +103,7 @@ namespace Plugins
 
         public override List<string> GetCustomEvents()
         {
-            return new List<string>() { "Graphics Bounce", "Sound Detected" };
+            return new List<string>() { "Rectangle Bounce"};
         }       
 
         public string GetConfiguration(string languageCode)
@@ -153,27 +127,6 @@ namespace Plugins
                 Utils.LastException = ex;
             }
 
-        }
-
-        //Implement IDisposable.
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    // Free other state (managed objects).
-                }
-                // Free your own state (unmanaged objects).
-                // Set large fields to null.
-                _disposed = true;
-            }
         }
 
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
@@ -234,6 +187,7 @@ namespace Plugins
             }
             else
             {
+                Results.Add(new ResultInfo("Rectangle Bounce", "bounce detected"));
                 XBounce = -XBounce;
                 recLoc.X -= XBounce * recSize / 2;
             }
@@ -244,6 +198,7 @@ namespace Plugins
             }
             else
             {
+                Results.Add(new ResultInfo("Rectangle Bounce", "bounce detected"));
                 YBounce = -YBounce;
                 recLoc.Y -= YBounce * recSize / 2;
             }

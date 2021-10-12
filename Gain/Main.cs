@@ -10,11 +10,11 @@ namespace Plugins
 {
     public class Main : PluginBase, IAgentPluginMicrophone
     {
-        private bool _disposed;
+        
         private EqualizerBand[] _bands;
         private BiQuadFilter[,] _filters = null;
         private bool _update = true;
-        private readonly List<string> loadedAssemblies = new List<string>();
+        
 
         public Main()
         {
@@ -34,38 +34,12 @@ namespace Plugins
             }
         }
 
-
         class EqualizerBand
         {
             public float Frequency { get; set; }
             public float Gain { get; set; }
             public float Bandwidth { get; set; }
-        }
-
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            AssemblyName assemblyName = new AssemblyName(args.Name);
-            string curAssemblyFolder = System.IO.Path.GetDirectoryName(new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-
-            DirectoryInfo directoryInfo = new DirectoryInfo(curAssemblyFolder);
-
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
-            {
-                string fileNameWithoutExt = fileInfo.Name.Replace(fileInfo.Extension, "");
-
-                if (assemblyName.Name.ToUpperInvariant() == fileNameWithoutExt.ToUpperInvariant())
-                {
-                    //prevent stack overflow
-                    if (!loadedAssemblies.Contains(fileInfo.FullName))
-                    {
-                        loadedAssemblies.Add(fileInfo.FullName);
-                        return Assembly.Load(AssemblyName.GetAssemblyName(fileInfo.FullName));
-                    }
-                }
-            }
-
-            return null;
-        }
+        }     
 
         private void CreateFilters()
         {
@@ -156,7 +130,6 @@ namespace Plugins
 
         public void SetConfiguration(string json)
         {
-            //populate configObject with json values
             try
             {
                 dynamic d = JsonConvert.DeserializeObject(json);
@@ -170,27 +143,6 @@ namespace Plugins
 
         }
 
-        //Implement IDisposable.
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    // Free other state (managed objects).
-                }
-                // Free your own state (unmanaged objects).
-                // Set large fields to null.
-                _disposed = true;
-            }
-        }
-
         public string Supports
         {
             get
@@ -202,8 +154,8 @@ namespace Plugins
         // Use C# destructor syntax for finalization code.
         ~Main()
         {
-            // Simply call Dispose(false).
             Dispose(false);
         }
+
     }
 }

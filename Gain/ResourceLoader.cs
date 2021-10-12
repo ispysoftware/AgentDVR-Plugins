@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PluginShared;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Plugins
             var json = LoadResource(assembly, "json.config_" + languageCode + ".json");
             if (string.IsNullOrEmpty(json))
                 json = LoadResource(assembly, "json.config_en.json");
-            json = json.Replace("VERSION", "v" + typeof(Utils).Assembly.GetName().Version);
+            json = json.Replace("VERSION", "v" + typeof(ResourceLoader).Assembly.GetName().Version);
             return json;
 
         }

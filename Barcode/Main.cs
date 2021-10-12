@@ -15,14 +15,13 @@ namespace Plugins
 {
     public class Main : PluginBase, IAgentPluginCamera
     {
-        private bool _disposed;
-        private List<string> loadedAssemblies = new List<string>();
         private DateTime _lastScan = DateTime.UtcNow;
 
         public Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
+
         private configuration _configObject;
         public configuration ConfigObject
         {
@@ -35,31 +34,6 @@ namespace Plugins
                 return _configObject;
             }
         }
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            AssemblyName assemblyName = new AssemblyName(args.Name);
-            string curAssemblyFolder = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-
-            DirectoryInfo directoryInfo = new DirectoryInfo(curAssemblyFolder);
-
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
-            {
-                string fileNameWithoutExt = fileInfo.Name.Replace(fileInfo.Extension, "");
-
-                if (assemblyName.Name.ToUpperInvariant() == fileNameWithoutExt.ToUpperInvariant())
-                {
-                    //prevent stack overflow
-                    if (!loadedAssemblies.Contains(fileInfo.FullName))
-                    {
-                        loadedAssemblies.Add(fileInfo.FullName);
-                        return Assembly.Load(AssemblyName.GetAssemblyName(fileInfo.FullName));
-                    }
-                }
-            }
-
-            return null;
-        }
-
         public string GetConfiguration(string languageCode)
         {
             //populate json
@@ -82,26 +56,6 @@ namespace Plugins
 
         }
 
-        //Implement IDisposable.
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    // Free other state (managed objects).
-                }
-                // Free your own state (unmanaged objects).
-                // Set large fields to null.
-                _disposed = true;
-            }
-        }
         private Task _processor;
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
         {
@@ -235,10 +189,8 @@ namespace Plugins
             }
         }
 
-        // Use C# destructor syntax for finalization code.
         ~Main()
         {
-            // Simply call Dispose(false).
             Dispose(false);
         }
     }
