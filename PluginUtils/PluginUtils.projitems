@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c44a7120-65d6-4c1c-8db6-ccf543ac496d</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>PluginUtils</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IAgentPlugin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IAgentPluginCamera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IAgentPluginMicrophone.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Line2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PluginBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ResourceLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ResultInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />
+  </ItemGroup>
+</Project>

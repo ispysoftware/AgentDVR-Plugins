@@ -25,12 +25,11 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PluginShared\PluginShared.csproj" />
-  </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Demo\&quot; (&#xD;&#xA;    xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Demo\&quot; /F /R /Y /I&#xD;&#xA;)" />
   </Target>
+  
+  <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />
 
 </Project>

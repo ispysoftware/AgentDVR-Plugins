@@ -30,9 +30,6 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PluginShared\PluginShared.csproj" />
-  </ItemGroup>
   <PropertyGroup>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -45,4 +42,6 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Barcode\&quot; (&#xD;&#xA;    xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Barcode\&quot; /F /R /Y /I&#xD;&#xA;)" />
   </Target>
+  
+  <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />
 </Project>

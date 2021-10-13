@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace PluginShared
+namespace PluginUtils
 {
     public interface IAgentPluginCamera: IAgentPlugin
     {

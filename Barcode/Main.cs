@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using PluginShared;
+using PluginUtils;
 using ZXing;
 using ZXing.Common;
 
@@ -20,41 +16,7 @@ namespace Plugins
         public Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
-
-        private configuration _configObject;
-        public configuration ConfigObject
-        {
-            get
-            {
-                if (_configObject != null)
-                    return _configObject;
-
-                _configObject = new configuration();
-                return _configObject;
-            }
-        }
-        public string GetConfiguration(string languageCode)
-        {
-            //populate json
-            dynamic d = Utils.PopulateResponse(ResourceLoader.LoadJson(languageCode), ConfigObject);
-            return JsonConvert.SerializeObject(d);
-        }
-
-        public void SetConfiguration(string json)
-        {
-            //populate configObject with json values
-            try
-            {
-                dynamic d = JsonConvert.DeserializeObject(json);
-                Utils.PopulateObject(d, ConfigObject);
-            }
-            catch (Exception ex)
-            {
-                Utils.LastException = ex;
-            }
-
-        }
+        }       
 
         private Task _processor;
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
@@ -160,18 +122,18 @@ namespace Plugins
             }
             catch (ReaderException e)
             {
-
+                Utils.LastException = e;
             }
             catch (Exception ex)
             {
-                string m = ex.Message;
+                Utils.LastException = ex;
             }
 
             if (rawResult != null)
             {
                 if (!String.IsNullOrEmpty(rawResult.Text))
                 {
-                    Results.Add(new Utils.ResultInfo("Barcode Recognized", rawResult.Text));
+                    Results.Add(new ResultInfo("Barcode Recognized", rawResult.Text));
                 }
             }
         }

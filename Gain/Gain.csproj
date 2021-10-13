@@ -26,9 +26,6 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PluginShared\PluginShared.csproj" />
-  </ItemGroup>
   <PropertyGroup>
     <Version>1.1.1</Version>
     <AssemblyVersion>1.1.1.0</AssemblyVersion>
@@ -38,4 +35,6 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Gain\&quot; (&#xD;&#xA;    xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Gain\&quot; /F /R /Y /I&#xD;&#xA;)" />
   </Target>
+  
+  <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />
 </Project>

@@ -3,14 +3,49 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using static PluginShared.Utils;
 
-namespace PluginShared
+namespace PluginUtils
 {
     public class PluginBase
     {
         private bool _disposed;
         private readonly List<string> loadedAssemblies = new List<string>();
+
+        private configuration _configObject;
+        public configuration ConfigObject
+        {
+            get
+            {
+                if (_configObject != null)
+                    return _configObject;
+
+                _configObject = new configuration();
+                return _configObject;
+            }
+        }
+        public string GetConfiguration(string languageCode)
+        {
+            //populate json
+            dynamic d = Utils.PopulateResponse(ResourceLoader.LoadJson(languageCode), ConfigObject);
+            return JsonConvert.SerializeObject(d);
+        }
+
+        public void SetConfiguration(string json)
+        {
+            //populate configObject with json values
+            try
+            {
+                dynamic d = JsonConvert.DeserializeObject(json);
+                Utils.PopulateObject(d, ConfigObject);
+            }
+            catch (Exception ex)
+            {
+                Utils.LastException = ex;
+            }
+
+        }
+
+
         public Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             AssemblyName assemblyName = new AssemblyName(args.Name);

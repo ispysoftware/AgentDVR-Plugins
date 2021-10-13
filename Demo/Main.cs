@@ -4,8 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
-using PluginShared;
-using static PluginShared.Utils;
+using PluginUtils;
 
 namespace Plugins
 {
@@ -17,19 +16,6 @@ namespace Plugins
         public Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
-
-        private configuration _configObject;
-        private configuration ConfigObject
-        {
-            get
-            {
-                if (_configObject != null)
-                    return _configObject;
-
-                _configObject = new configuration();
-                return _configObject;
-            }
         }
                 
         private void CheckAlert()
@@ -107,29 +93,6 @@ namespace Plugins
             return new List<string>() { "Rectangle Bounce"};
         }       
 
-        public string GetConfiguration(string languageCode)
-        {
-            //populate json
-            var json = ResourceLoader.LoadJson(languageCode);
-            dynamic d = Utils.PopulateResponse(json, ConfigObject);
-            return JsonConvert.SerializeObject(d);
-        }
-
-        public void SetConfiguration(string json)
-        {
-            //populate configObject with json values
-            try
-            {
-                dynamic d = JsonConvert.DeserializeObject(json);
-                Utils.PopulateObject(d, ConfigObject);
-            }
-            catch (Exception ex)
-            {
-                Utils.LastException = ex;
-            }
-
-        }
-
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
         {
             //fire off an alert every 10 seconds
@@ -169,6 +132,7 @@ namespace Plugins
                     using (Graphics g = Graphics.FromImage(img))
                     {
                         g.FillRectangle(Brushes.Red, new Rectangle(recLoc, new Size(recSize, recSize)));
+                        g.DrawString("Hi!", new Font(new FontFamily("Verdana"), 20, FontStyle.Bold), Brushes.White, recLoc.Adjust(5, 20));
 
                         //draw trip wires if defined
                         if (!string.IsNullOrEmpty(ConfigObject.Example_Trip_Wires))
@@ -190,15 +154,14 @@ namespace Plugins
                         }
                     }
                 }
+                //bounce rectangle about
                 MoveRec(sz.Width,sz.Height);
-
-                
-                
             }
         }
 
-        private Point recLoc = new Point(10, 10);
-        private int recSize = 40;
+        #region bouncing rectangle
+        private Point recLoc = new Point(100, 100);
+        private int recSize = 80;
         private int speed = 5;
         private int XBounce = 1;
         private int YBounce = -1;
@@ -213,7 +176,7 @@ namespace Plugins
             {
                 Results.Add(new ResultInfo("Rectangle Bounce", "bounce detected"));
                 XBounce = -XBounce;
-                recLoc.X -= XBounce * recSize / 2;
+                recLoc.X -= XBounce * speed;
             }
 
             if ((recLoc.Y >= 0) && (recLoc.Y + recSize <= height)) //Within Y Bounds
@@ -224,9 +187,10 @@ namespace Plugins
             {
                 Results.Add(new ResultInfo("Rectangle Bounce", "bounce detected"));
                 YBounce = -YBounce;
-                recLoc.Y -= YBounce * recSize / 2;
+                recLoc.Y -= YBounce * speed;
             }
         }
+        #endregion
 
         public string Supports
         {
@@ -236,7 +200,6 @@ namespace Plugins
             }
         }
 
-        // Use C# destructor syntax for finalization code.
         ~Main()
         {
             Dispose(false);

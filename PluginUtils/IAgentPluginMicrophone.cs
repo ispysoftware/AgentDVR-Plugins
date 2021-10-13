@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginShared
+namespace PluginUtils
 {
     public interface IAgentPluginMicrophone: IAgentPlugin
     {

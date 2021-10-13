@@ -8,30 +8,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace PluginShared
+namespace PluginUtils
 {
-    public class Utils
+    public static class Utils
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public struct ResultInfo
-        {
-            public string EventName;
-            public string MSG;
-            public string AIJSON;
-            public string Filename;
-            public string Tags;
-            public ResultInfo(string eventName, string msg = "", string tags = "", string aijson = "", string filename = "")
-            {
-                EventName = eventName;
-                MSG = msg;
-                AIJSON = aijson;
-                Filename = filename;
-                Tags = tags;
-            }
-        }
-
         public static Exception LastException { get; set; }
 
         public static bool TaskRunning(Task t)
