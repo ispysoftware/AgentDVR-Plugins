@@ -38,8 +38,6 @@ public partial class configuration {
     
     private int band7Field;
     
-    private int band8Field;
-    
     private bool enabledField;
     
     public configuration() {
@@ -50,7 +48,6 @@ public partial class configuration {
         this.band5Field = 0;
         this.band6Field = 0;
         this.band7Field = 0;
-        this.band8Field = 0;
         this.enabledField = false;
     }
     
@@ -121,16 +118,6 @@ public partial class configuration {
         }
         set {
             this.band7Field = value;
-        }
-    }
-    
-    /// <remarks/>
-    public int band8 {
-        get {
-            return this.band8Field;
-        }
-        set {
-            this.band8Field = value;
         }
     }
     

@@ -10,7 +10,6 @@
         <xs:element name="band5" type="xs:int" default="0"/>
         <xs:element name="band6" type="xs:int" default="0"/>
         <xs:element name="band7" type="xs:int" default="0"/>
-        <xs:element name="band8" type="xs:int" default="0"/>
         <xs:element name="enabled" type="xs:boolean" default="false"/>
       </xs:sequence>
     </xs:complexType>

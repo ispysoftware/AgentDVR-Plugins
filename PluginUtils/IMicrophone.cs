@@ -19,7 +19,9 @@ namespace PluginUtils
         /// <param name="name">The Agent microphone name</param>
         /// <param name="objectID">The Agent object ID</param>
         /// <param name="localPort">The local port of the Server for API calls</param>
-        void SetMicrophoneInfo(string name, int objectID, int localPort);
+        /// <param name="sampleRate">The number of samples in 1 second (Hz)</param>
+        /// <param name="channels">The number of audio channels</param>
+        void SetMicrophoneInfo(string name, int objectID, int localPort, int sampleRate, int channels);
 
     }
 }

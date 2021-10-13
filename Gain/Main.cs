@@ -11,10 +11,11 @@ namespace Plugins
         
         private EqualizerBand[] _bands;
         private BiQuadFilter[,] _filters = null;
+        private bool _update = true;
         
         public Main(): base()
         {
-            CreateFilters();
+            
         }
 
         public string Supports
@@ -25,6 +26,12 @@ namespace Plugins
             }
         }
 
+        public override void SetConfiguration(string json)
+        {
+            base.SetConfiguration(json);
+            _update = true;
+        }
+
         public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
         {
             byte[] truncArray = new byte[bytesRecorded];
@@ -32,6 +39,10 @@ namespace Plugins
             Array.Copy(rawData, truncArray, truncArray.Length);
             if (ConfigObject.enabled)
             {
+                if (_update)
+                {
+                    CreateFilters();
+                }
                 List<float> samples = new List<float>();
                 for (int n = 0; n < bytesRecorded; n += 2)
                 {
@@ -80,12 +91,10 @@ namespace Plugins
                         new EqualizerBand {Bandwidth = 0.8f, Frequency = 800, Gain = ConfigObject.band4},
                         new EqualizerBand {Bandwidth = 0.8f, Frequency = 1200, Gain = ConfigObject.band5},
                         new EqualizerBand {Bandwidth = 0.8f, Frequency = 2400, Gain = ConfigObject.band6},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 4800, Gain = ConfigObject.band7},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 9600, Gain = ConfigObject.band8}
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 4800, Gain = ConfigObject.band7}
                     };
 
-            if (_filters == null)
-                _filters = new BiQuadFilter[1, _bands.Length];
+            _filters = new BiQuadFilter[1, _bands.Length];
 
             for (int bandIndex = 0; bandIndex < _bands.Length; bandIndex++)
             {
@@ -93,11 +102,12 @@ namespace Plugins
                 for (int n = 0; n < 1; n++)
                 {
                     if (_filters[n, bandIndex] == null)
-                        _filters[n, bandIndex] = BiQuadFilter.PeakingEQ(16000, band.Frequency, band.Bandwidth, band.Gain);
+                        _filters[n, bandIndex] = BiQuadFilter.PeakingEQ(22050, band.Frequency, band.Bandwidth, band.Gain);
                     else
-                        _filters[n, bandIndex].SetPeakingEq(16000, band.Frequency, band.Bandwidth, band.Gain);
+                        _filters[n, bandIndex].SetPeakingEq(22050, band.Frequency, band.Bandwidth, band.Gain);
                 }
             }
+            _update = false;
         }
 
         class EqualizerBand

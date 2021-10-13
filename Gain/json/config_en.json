@@ -18,8 +18,7 @@
               { "text": "800Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band4", "live": true},
               { "text": "1200Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band5", "live": true},
               { "text": "2400Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band6", "live": true},
-              { "text": "4800Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band7", "live": true},
-              { "text": "9600Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band8", "live": true}
+              { "text": "4800Hz", "value": [ ], "type": "Slider", "min": -30, "max": 30, "range": false, "bindto": "band7", "live": true}
             ]
         }
         

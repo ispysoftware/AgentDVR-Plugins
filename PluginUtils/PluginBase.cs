@@ -35,7 +35,7 @@ namespace PluginUtils
             return JsonConvert.SerializeObject(d);
         }
 
-        public void SetConfiguration(string json)
+        public virtual void SetConfiguration(string json)
         {
             //populate configObject with json values
             try
@@ -77,7 +77,7 @@ namespace PluginUtils
 
 
         public string CameraName, MicrophoneName;
-        public int CameraID, MicrophoneID, LocalPort;
+        public int CameraID, MicrophoneID, LocalPort, SampleRate, Channels;
 
         public virtual string GetResultJSON()
         {
@@ -127,11 +127,13 @@ namespace PluginUtils
             LocalPort = localPort;
         }
 
-        public void SetMicrophoneInfo(string name, int objectID, int localPort)
+        public void SetMicrophoneInfo(string name, int objectID, int localPort, int sampleRate, int channels)
         {
             MicrophoneName = name;
             MicrophoneID = objectID;
             LocalPort = localPort;
+            SampleRate = sampleRate;
+            Channels = channels;
         }
 
         //Implement IDisposable.
