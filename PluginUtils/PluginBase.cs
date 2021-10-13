@@ -11,6 +11,11 @@ namespace PluginUtils
         private bool _disposed;
         private readonly List<string> loadedAssemblies = new List<string>();
 
+        public PluginBase()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
         private configuration _configObject;
         public configuration ConfigObject
         {
@@ -44,7 +49,6 @@ namespace PluginUtils
             }
 
         }
-
 
         public Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {

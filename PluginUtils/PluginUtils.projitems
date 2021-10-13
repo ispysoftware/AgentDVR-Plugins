@@ -10,9 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IAgentPlugin.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IAgentPluginCamera.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IAgentPluginMicrophone.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPlugin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICamera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMicrophone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Line2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PluginBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResourceLoader.cs" />

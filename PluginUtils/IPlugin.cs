@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PluginUtils
 {
-    public interface IAgentPlugin: IDisposable
+    public interface IPlugin: IDisposable
     {
         /// <summary>
         /// Fixed string defining if this plugin supports "video", "audio" or both "video,audio"

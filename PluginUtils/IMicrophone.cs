@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PluginUtils
 {
-    public interface IAgentPluginMicrophone: IAgentPlugin
+    public interface IMicrophone: IPlugin
     {
         /// <summary>
         /// Process incoming audio data from Agent. This will be in a fixed format of 22050Hz, one channel

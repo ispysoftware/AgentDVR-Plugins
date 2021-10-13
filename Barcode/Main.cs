@@ -9,20 +9,35 @@ using ZXing.Common;
 
 namespace Plugins
 {
-    public class Main : PluginBase, IAgentPluginCamera
+    public class Main : PluginBase, ICamera
     {
         private DateTime _lastScan = DateTime.UtcNow;
-
-        public Main()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }       
-
         private Task _processor;
+
+        public Main() : base()
+        {
+
+        }
+
+        public override List<string> GetCustomEvents()
+        {
+            return new List<string> { "Barcode Recognized" };
+        }
+
+        public string Supports
+        {
+            get
+            {
+                return "video";
+            }
+        }
+
         public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
         {
-            if (channels!=3)
+            if (channels != 3)
+            {
                 return;
+            }
 
             if (Utils.TaskRunning(_processor))
                 return;
@@ -37,6 +52,7 @@ namespace Plugins
 
         }
 
+        #region ImageProcessing
         private void RunScanner(byte[] img, int width, int height)
         {
             var mBarcodeReader = new MultiFormatReader();
@@ -138,18 +154,7 @@ namespace Plugins
             }
         }
 
-        public override List<string> GetCustomEvents()
-        {
-            return new List<string> { "Barcode Recognized" };
-        }
-
-        public string Supports
-        {
-            get
-            {
-                return "video";
-            }
-        }
+        #endregion
 
         ~Main()
         {

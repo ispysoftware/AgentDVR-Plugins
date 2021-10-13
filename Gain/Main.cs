@@ -6,26 +6,69 @@ using PluginUtils;
 
 namespace Plugins
 {
-    public class Main : PluginBase, IAgentPluginMicrophone
+    public class Main : PluginBase, IMicrophone
     {
         
         private EqualizerBand[] _bands;
         private BiQuadFilter[,] _filters = null;
-        private bool _update = true;
         
-
-        public Main()
+        public Main(): base()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            CreateFilters();
         }
 
-
-        class EqualizerBand
+        public string Supports
         {
-            public float Frequency { get; set; }
-            public float Gain { get; set; }
-            public float Bandwidth { get; set; }
-        }     
+            get
+            {
+                return "audio";
+            }
+        }
+
+        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
+        {
+            byte[] truncArray = new byte[bytesRecorded];
+
+            Array.Copy(rawData, truncArray, truncArray.Length);
+            if (ConfigObject.enabled)
+            {
+                List<float> samples = new List<float>();
+                for (int n = 0; n < bytesRecorded; n += 2)
+                {
+                    float sampleValue = BitConverter.ToInt16(truncArray, n) / 32768f;
+                    for (int band = 0; band < _bands.Length; band++)
+                    {
+                        sampleValue = _filters[0, band].Transform(sampleValue);
+                    }
+
+                    samples.Add(sampleValue);
+                }
+
+                truncArray = GetSamplesWaveData(samples.ToArray(), samples.Count);
+
+            }
+            return truncArray;
+        }
+
+        #region audio processing
+        private static byte[] GetSamplesWaveData(float[] samples, int samplesCount)
+        {
+            var pcm = new byte[samplesCount * 2];
+            int sampleIndex = 0,
+                pcmIndex = 0;
+
+            while (sampleIndex < samplesCount)
+            {
+                var outsample = (short)(samples[sampleIndex] * short.MaxValue);
+                pcm[pcmIndex] = (byte)(outsample & 0xff);
+                pcm[pcmIndex + 1] = (byte)((outsample >> 8) & 0xff);
+
+                sampleIndex++;
+                pcmIndex += 2;
+            }
+
+            return pcm;
+        }        
 
         private void CreateFilters()
         {
@@ -55,65 +98,15 @@ namespace Plugins
                         _filters[n, bandIndex].SetPeakingEq(16000, band.Frequency, band.Bandwidth, band.Gain);
                 }
             }
-            _update = false;
         }
 
-
-        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
+        class EqualizerBand
         {
-            byte[] truncArray = new byte[bytesRecorded];
-
-            Array.Copy(rawData, truncArray, truncArray.Length);
-            if (ConfigObject.enabled)
-            {
-                if (_update)
-                {
-                    CreateFilters();
-                }
-                List<float> samples = new List<float>();
-                for (int n = 0; n < bytesRecorded; n += 2)
-                {
-                    float sampleValue = BitConverter.ToInt16(truncArray, n) / 32768f;
-                    for (int band = 0; band < _bands.Length; band++)
-                    {
-                        sampleValue = _filters[0, band].Transform(sampleValue);
-                    }
-
-                    samples.Add(sampleValue);
-                }
-
-                truncArray = GetSamplesWaveData(samples.ToArray(), samples.Count);
-
-            }
-            return truncArray;
+            public float Frequency { get; set; }
+            public float Gain { get; set; }
+            public float Bandwidth { get; set; }
         }
-
-        private static byte[] GetSamplesWaveData(float[] samples, int samplesCount)
-        {
-            var pcm = new byte[samplesCount * 2];
-            int sampleIndex = 0,
-                pcmIndex = 0;
-
-            while (sampleIndex < samplesCount)
-            {
-                var outsample = (short)(samples[sampleIndex] * short.MaxValue);
-                pcm[pcmIndex] = (byte)(outsample & 0xff);
-                pcm[pcmIndex + 1] = (byte)((outsample >> 8) & 0xff);
-
-                sampleIndex++;
-                pcmIndex += 2;
-            }
-
-            return pcm;
-        }
-
-        public string Supports
-        {
-            get
-            {
-                return "audio";
-            }
-        }
+        #endregion
 
         ~Main()
         {

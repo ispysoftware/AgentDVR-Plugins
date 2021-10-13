@@ -1,33 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
-using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
 using PluginUtils;
+using SixLabors.Fonts;
+using System.Linq;
 
 namespace Plugins
 {
-    public class Main : PluginBase, IAgentPluginCamera, IAgentPluginMicrophone
+    public class Main : PluginBase, ICamera, IMicrophone
     {
         private DateTime _lastAlert = DateTime.UtcNow;
-        
+        private Font _drawFont;
+        private IPen _pen;
 
-        public Main()
+        public Main() : base()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
-                
-        private void CheckAlert()
-        {
-            if (ConfigObject.AlertsEnabled)
+            //get cross platform font family
+            string[] fontfams = new[] { "Verdana", "Arial", "Helvetica", "Geneva", "FreeMono", "DejaVu Sans"};
+            FontFamily fam = null;
+            foreach(var fontfam in fontfams)
             {
-                if (_lastAlert < DateTime.UtcNow.AddSeconds(-10))
-                {
-                    _lastAlert = DateTime.UtcNow;
-                    Results.Add(new ResultInfo("alert"));
-                }
+                if (SystemFonts.Collection.TryFind(fontfam, out fam))
+                    break;
             }
+            if (fam==null)
+            {
+                fam = SystemFonts.Collection.Families.First();
+            }
+
+            _drawFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
+            _pen = Pens.Solid(Color.Red, 3);
+        }
+
+        public string Supports
+        {
+            get
+            {
+                return "video,audio";
+            }
+        }
+
+        public override List<string> GetCustomEvents()
+        {
+            return new List<string>() { "Rectangle Bounce" };
         }
 
         public override void ProcessAgentEvent(string ev)
@@ -64,36 +82,7 @@ namespace Plugins
             return adjustVolume(rawData, Convert.ToDouble(ConfigObject.Volume) / 100d);
         }
 
-        private byte[] adjustVolume(byte[] audioSamples, double volume)
-        {
-            byte[] array = new byte[audioSamples.Length];
-            for (int i = 0; i < array.Length; i += 2)
-            {
-                // convert byte pair to int
-                short buf1 = audioSamples[i + 1];
-                short buf2 = audioSamples[i];
-
-                buf1 = (short)((buf1 & 0xff) << 8);
-                buf2 = (short)(buf2 & 0xff);
-
-                short res = (short)(buf1 | buf2);
-                res = (short)(res * volume);
-
-                // convert back
-                array[i] = (byte)res;
-                array[i + 1] = (byte)(res >> 8);
-
-            }
-            return array;
-        }
-        
-
-        public override List<string> GetCustomEvents()
-        {
-            return new List<string>() { "Rectangle Bounce"};
-        }       
-
-        public void ProcessVideoFrame(IntPtr frame, Size sz, int channels, int stride)
+        public void ProcessVideoFrame(IntPtr frame, System.Drawing.Size sz, int channels, int stride)
         {
             //fire off an alert every 10 seconds
             CheckAlert();
@@ -126,21 +115,23 @@ namespace Plugins
 
             if (ConfigObject.GraphicsEnabled)
             {
-                //draw something on the frame
-                using (var img = new Bitmap(sz.Width, sz.Height, stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, frame))
+                //Use SixLabors drawing for cross platform support.
+                unsafe
                 {
-                    using (Graphics g = Graphics.FromImage(img))
+                    using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
                     {
-                        g.FillRectangle(Brushes.Red, new Rectangle(recLoc, new Size(recSize, recSize)));
-                        g.DrawString("Hi!", new Font(new FontFamily("Verdana"), 20, FontStyle.Bold), Brushes.White, recLoc.Adjust(5, 20));
+                        image.Mutate(x => x.Fill(Color.Red, new Rectangle(recLoc, new Size(recSize, recSize))));
+
+                        image.Mutate(x => x.DrawText("Hi!", _drawFont, Color.White, new PointF(recLoc.X + 10, recLoc.Y + 20)));
 
                         //draw trip wires if defined
                         if (!string.IsNullOrEmpty(ConfigObject.Example_Trip_Wires))
                         {
                             var lines = Utils.ParseTripWires(sz, ConfigObject.Example_Trip_Wires);
-                            foreach(var line in lines)
+                            foreach (var line in lines)
                             {
-                                g.DrawLine(Pens.Red, line.InitialPoint, line.TerminalPoint);
+                                var points = new PointF[] { new PointF(line.InitialPoint.X, line.InitialPoint.Y), new PointF(line.TerminalPoint.X, line.TerminalPoint.Y) };
+                                image.Mutate(x => x.DrawLines(_pen, points));
                             }
                         }
                         //draw rectangles if defined
@@ -149,15 +140,41 @@ namespace Plugins
                             var areas = Utils.ParseAreas(sz, ConfigObject.Example_Area);
                             foreach (var area in areas)
                             {
-                                g.FillRectangle(Brushes.Aqua, area);
+                                image.Mutate(x => x.Fill(Color.WhiteSmoke, new Rectangle(area.X, area.Y, area.Width, area.Height)));
                             }
                         }
                     }
                 }
+
                 //bounce rectangle about
                 MoveRec(sz.Width,sz.Height);
             }
         }
+
+        #region adjust volume
+        private byte[] adjustVolume(byte[] audioSamples, double volume)
+        {
+            byte[] array = new byte[audioSamples.Length];
+            for (int i = 0; i < array.Length; i += 2)
+            {
+                // convert byte pair to int
+                short buf1 = audioSamples[i + 1];
+                short buf2 = audioSamples[i];
+
+                buf1 = (short)((buf1 & 0xff) << 8);
+                buf2 = (short)(buf2 & 0xff);
+
+                short res = (short)(buf1 | buf2);
+                res = (short)(res * volume);
+
+                // convert back
+                array[i] = (byte)res;
+                array[i + 1] = (byte)(res >> 8);
+
+            }
+            return array;
+        }
+        #endregion
 
         #region bouncing rectangle
         private Point recLoc = new Point(100, 100);
@@ -192,11 +209,15 @@ namespace Plugins
         }
         #endregion
 
-        public string Supports
+        private void CheckAlert()
         {
-            get
+            if (ConfigObject.AlertsEnabled)
             {
-                return "video,audio";
+                if (_lastAlert < DateTime.UtcNow.AddSeconds(-10))
+                {
+                    _lastAlert = DateTime.UtcNow;
+                    Results.Add(new ResultInfo("alert"));
+                }
             }
         }
 

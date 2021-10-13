@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PluginUtils
 {
-    public interface IAgentPluginCamera: IAgentPlugin
+    public interface ICamera: IPlugin
     {
         /// <summary>
         /// Processes incoming video frames from Agent
