@@ -9,11 +9,11 @@ namespace PluginUtils
     public class PluginBase
     {
         private bool _disposed;
-        private readonly List<string> loadedAssemblies = new List<string>();
+        
 
         public PluginBase()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            
         }
 
         private configuration _configObject;
@@ -49,32 +49,6 @@ namespace PluginUtils
             }
 
         }
-
-        public Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            AssemblyName assemblyName = new AssemblyName(args.Name);
-            string curAssemblyFolder = System.IO.Path.GetDirectoryName(new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-
-            DirectoryInfo directoryInfo = new DirectoryInfo(curAssemblyFolder);
-
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
-            {
-                string fileNameWithoutExt = fileInfo.Name.Replace(fileInfo.Extension, "");
-
-                if (assemblyName.Name.ToUpperInvariant() == fileNameWithoutExt.ToUpperInvariant())
-                {
-                    //prevent stack overflow
-                    if (!loadedAssemblies.Contains(fileInfo.FullName))
-                    {
-                        loadedAssemblies.Add(fileInfo.FullName);
-                        return Assembly.Load(AssemblyName.GetAssemblyName(fileInfo.FullName));
-                    }
-                }
-            }
-
-            return null;
-        }
-
 
         public string CameraName, MicrophoneName;
         public int CameraID, MicrophoneID, LocalPort, SampleRate, Channels;

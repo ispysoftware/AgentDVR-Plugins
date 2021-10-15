@@ -16,8 +16,9 @@ namespace Plugins
         private Font _drawFont;
         private IPen _pen;
 
-        public Main() : base()
+        public Main():base()
         {
+            
             //get cross platform font family
             string[] fontfams = new[] { "Verdana", "Arial", "Helvetica", "Geneva", "FreeMono", "DejaVu Sans"};
             FontFamily fam = null;
