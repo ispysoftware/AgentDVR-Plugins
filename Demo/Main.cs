@@ -14,7 +14,9 @@ namespace Plugins
     {
         private DateTime _lastAlert = DateTime.UtcNow;
         private Font _drawFont;
-        private IPen _pen;
+        private bool _needUpdate = false;
+        private IPen _wirepen, _trippedpen;
+        private List<Line2D> _tripwires = new List<Line2D>();
 
         public Main():base()
         {
@@ -33,7 +35,9 @@ namespace Plugins
             }
 
             _drawFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
-            _pen = Pens.Solid(Color.Red, 3);
+            _wirepen = Pens.Solid(Color.Green, 3);
+            _trippedpen = Pens.Solid(Color.Red, 3);
+
         }
 
         public string Supports
@@ -46,7 +50,14 @@ namespace Plugins
 
         public override List<string> GetCustomEvents()
         {
-            return new List<string>() { "Rectangle Bounce" };
+            return new List<string>() { "Box Bounce", "Box Crossed Tripwire" };
+        }
+
+        public override void SetConfiguration(string json)
+        {
+            base.SetConfiguration(json);
+            _needUpdate = true;
+            
         }
 
         public override void ProcessAgentEvent(string ev)
@@ -85,6 +96,11 @@ namespace Plugins
 
         public void ProcessVideoFrame(IntPtr frame, System.Drawing.Size sz, int channels, int stride)
         {
+            if (_needUpdate)
+            {
+                _tripwires = Utils.ParseTripWires(sz, ConfigObject.Example_Trip_Wires);
+                _needUpdate = false;
+            }
             //fire off an alert every 10 seconds
             CheckAlert();
 
@@ -121,18 +137,32 @@ namespace Plugins
                 {
                     using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
                     {
-                        image.Mutate(x => x.Fill(Color.Red, new Rectangle(recLoc, new Size(recSize, recSize))));
+                        var box = new Rectangle(recLoc, new Size(recSize, recSize));
+                        image.Mutate(x => x.Fill(Color.Red, box));
 
-                        image.Mutate(x => x.DrawText("Hi!", _drawFont, Color.White, new PointF(recLoc.X + 10, recLoc.Y + 20)));
+                        image.Mutate(x => x.DrawText("DVD", _drawFont, Color.White, new PointF(recLoc.X + 10, recLoc.Y + 20)));
 
                         //draw trip wires if defined
-                        if (!string.IsNullOrEmpty(ConfigObject.Example_Trip_Wires))
+                        if (_tripwires.Count>0)
                         {
-                            var lines = Utils.ParseTripWires(sz, ConfigObject.Example_Trip_Wires);
-                            foreach (var line in lines)
+                            foreach (var wire in _tripwires)
                             {
-                                var points = new PointF[] { new PointF(line.InitialPoint.X, line.InitialPoint.Y), new PointF(line.TerminalPoint.X, line.TerminalPoint.Y) };
-                                image.Mutate(x => x.DrawLines(_pen, points));
+                                var points = new PointF[] { new PointF(wire.InitialPoint.X, wire.InitialPoint.Y), new PointF(wire.TerminalPoint.X, wire.TerminalPoint.Y) };
+
+                                var pen = _wirepen;
+
+                                if (Utils.LineIntersectsRect(wire.InitialPoint, wire.TerminalPoint, new System.Drawing.Rectangle(box.X, box.Y, box.Width, box.Height))) {
+                                    pen = _trippedpen;
+                                    if (wire.LastTripped < DateTime.UtcNow.AddSeconds(-4))
+                                    {
+                                        //crossed tripwire, suspend new event from this tripwire for at least 5 seconds
+                                        wire.LastTripped = DateTime.UtcNow;
+                                        Results.Add(new ResultInfo("Box Crossed Tripwire", "box crossed the tripwire"));
+                                    }
+                                }
+
+                                image.Mutate(x => x.DrawLines(pen, points));
+
                             }
                         }
                         //draw rectangles if defined
@@ -192,7 +222,7 @@ namespace Plugins
             }
             else
             {
-                Results.Add(new ResultInfo("Rectangle Bounce", "bounce detected"));
+                Results.Add(new ResultInfo("Box Bounce", "bounce detected"));
                 XBounce = -XBounce;
                 recLoc.X -= XBounce * speed;
             }
@@ -203,7 +233,7 @@ namespace Plugins
             }
             else
             {
-                Results.Add(new ResultInfo("Rectangle Bounce", "bounce detected"));
+                Results.Add(new ResultInfo("Box Bounce", "bounce detected"));
                 YBounce = -YBounce;
                 recLoc.Y -= YBounce * speed;
             }
