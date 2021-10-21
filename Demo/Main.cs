@@ -155,7 +155,7 @@ namespace Plugins
                                     pen = _trippedpen;
                                     if (wire.LastTripped < DateTime.UtcNow.AddSeconds(-4))
                                     {
-                                        //crossed tripwire, suspend new event from this tripwire for at least 5 seconds
+                                        //crossed tripwire, suspend new event from this tripwire for at least 4 seconds
                                         wire.LastTripped = DateTime.UtcNow;
                                         Results.Add(new ResultInfo("Box Crossed Tripwire", "box crossed the tripwire"));
                                     }

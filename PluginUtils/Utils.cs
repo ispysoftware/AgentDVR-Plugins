@@ -290,9 +290,12 @@ namespace PluginUtils
         {
             var tripWireList = new List<Line2D>();
             var lp = JsonConvert.DeserializeObject<List<Points>>(json);
-            foreach (var p in lp)
+            if (lp != null)
             {
-                tripWireList.Add(new Line2D(frameSize, new Point(Convert.ToInt32(p.x), Convert.ToInt32(p.y)), new Point(Convert.ToInt32(p.x2), Convert.ToInt32(p.y2))));
+                foreach (var p in lp)
+                {
+                    tripWireList.Add(new Line2D(frameSize, new Point(Convert.ToInt32(p.x), Convert.ToInt32(p.y)), new Point(Convert.ToInt32(p.x2), Convert.ToInt32(p.y2))));
+                }
             }
             return tripWireList;
         }
