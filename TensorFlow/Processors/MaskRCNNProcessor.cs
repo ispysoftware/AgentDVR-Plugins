@@ -2,8 +2,8 @@
 using Emgu.TF.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
 using static Plugins.EventHandlers;
 
 namespace Plugins.Processors
@@ -47,7 +47,8 @@ namespace Plugins.Processors
             List<ResultEntry> reslist = new List<ResultEntry>();
             foreach (var result in results)
             {
-                reslist.Add(new ResultEntry() { Label = result[0].Label, Probability = Convert.ToInt32(result[0].Probability * 100), Region = GenRectangle(result[0].Region)});
+                if (!double.IsNaN(result[0].Probability))
+                    reslist.Add(new ResultEntry() { Label = result[0].Label, Probability = Convert.ToInt32(result[0].Probability * 100), Region = GenRectangle(result[0].Region)});
             }
             if (reslist.Count > 0)
                 ResultGenerated?.Invoke(this, new EventHandlers.ResultEventArgs(reslist));

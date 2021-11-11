@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<RootNamespace>Plugins</RootNamespace>
 		<AssemblyName>TensorFlow</AssemblyName>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -11,6 +12,7 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
   <ItemGroup>

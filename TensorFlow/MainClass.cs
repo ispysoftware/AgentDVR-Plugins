@@ -14,6 +14,7 @@ using Plugins.Processors;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace Plugins
 {
@@ -167,14 +168,31 @@ namespace Plugins
         {
             if (_needUpdate)
             {
+                _needUpdate = false;
                 Initialize();
+                return;
             }
 
             var _area = Rectangle.Empty;
             if (!string.IsNullOrEmpty(ConfigObject.Area))
             {
-                var i = Array.ConvertAll(ConfigObject.Area.Split(','), int.Parse);
-                var r = Utils.ScalePercentageRectangle(new System.Drawing.Rectangle(i[0], i[1], i[2], i[3]), sz);
+                dynamic zone = JsonConvert.DeserializeObject(ConfigObject.Area);
+                var d = zone[0];
+                var x = Convert.ToInt32(d["x"].Value);
+                var y = Convert.ToInt32(d["y"].Value);
+                var w = Convert.ToInt32(d["w"].Value);
+                var h = Convert.ToInt32(d["h"].Value);
+
+                var r = Utils.ScalePercentageRectangle(new System.Drawing.Rectangle(x,y,w,h), sz);
+                r.Height = r.Width;
+                if (r.Top + r.Height > sz.Height)
+                    r.Height = sz.Height - r.Top;
+                if (r.Left + r.Width > sz.Width)
+                    r.Width= sz.Width - r.Left;
+                r.Height = Math.Min(r.Height, r.Width);
+                r.Width = Math.Min(r.Width, r.Height);
+
+
                 _area = new Rectangle(r.X, r.Y, r.Width, r.Height);
             }
 
@@ -188,26 +206,19 @@ namespace Plugins
                             return;
 
                         Tensor t;
-                        var targetSize = _processor.SizeRequired == System.Drawing.Size.Empty ? sz : _processor.SizeRequired;
+                        var targetSize = _processor.SizeRequired == Size.Empty ? new Size(_area.Width,_area.Height) : _processor.SizeRequired;
                         unsafe
                         {
                             var buffer = new ReadOnlySpan<byte>((void*)frame, stride * sz.Height);
-                            using (var image = Image.Load<Bgr24>(buffer, out _))
+                            using (var image = Image.LoadPixelData<Bgr24>(buffer, sz.Width, sz.Height))
                             {
-                                ResizeOptions options = new ResizeOptions
-                                {
-                                    TargetRectangle = _area,
-                                    Compand = true,
-                                    Mode = ResizeMode.Max,
-                                    Size = new Size(targetSize.Width, targetSize.Height)
-                                };
-                                image.Mutate(x => x.Resize(options));
+                                image.Mutate(x => x.Resize(targetSize.Width, targetSize.Height, KnownResamplers.Bicubic,  _area, new Rectangle(0,0,sz.Width, sz.Height), true));
 
                                 if (image.TryGetSinglePixelSpan(out var span))
                                 {
-                                    byte[] rgbBytes = MemoryMarshal.AsBytes(span).ToArray();
-                                    t = new Tensor(DataType.Uint8, new int[] { 1, _processor.SizeRequired.Width, _processor.SizeRequired.Height, 3 });
-                                    Marshal.Copy(rgbBytes, 0, t.DataPointer, rgbBytes.Length);
+                                    float[] bgr = ConvertByteToFloat(MemoryMarshal.AsBytes(span).ToArray());
+                                    t = new Tensor(DataType.Float, new int[] { 1, _processor.SizeRequired.Width, _processor.SizeRequired.Height, 3 });
+                                    Marshal.Copy(bgr, 0, t.DataPointer, bgr.Length);
                                 }
                                 else
                                     return;
@@ -220,7 +231,7 @@ namespace Plugins
                 }
             }
 
-            if (ConfigObject.Overlay) {
+            if (ConfigObject.Overlay && _lockedResults!=null) {
                 var lres = lockedResults.ToList();
                 if (lres.Count == 0)
                     return;
@@ -242,7 +253,19 @@ namespace Plugins
             }
             
         }
-
+        private static float[] ConvertByteToFloat(byte[] array)
+        {
+            float[] floatArr = new float[array.Length / 4];
+            for (int i = 0; i < floatArr.Length; i++)
+            {
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(array, i * 4, 4);
+                }
+                floatArr[i] = BitConverter.ToSingle(array, i * 4);
+            }
+            return floatArr;
+        }
         private RectangleF TranslateToOriginalArea(RectangleF from, Rectangle source)
         {
             return new RectangleF(source.Left + from.Width * source.Width,source.Top + from.Height * source.Height, from.Width * source.Width,from.Height * source.Height);

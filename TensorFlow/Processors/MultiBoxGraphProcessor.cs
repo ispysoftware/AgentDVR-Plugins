@@ -2,7 +2,7 @@
 using Emgu.TF.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.Text;
 using System.Threading.Tasks;
 using Tensorflow;
@@ -49,7 +49,8 @@ namespace Plugins.Processors
             List<ResultEntry> reslist = new List<ResultEntry>();
             foreach (var result in results)
             {
-                reslist.Add(new ResultEntry() { Label = "Found", Probability = Convert.ToInt32(result.Scores * 100), Region = GenRectangle(result.DecodedLocations) });
+                if (!double.IsNaN(result.Scores))
+                    reslist.Add(new ResultEntry() { Label = "Found", Probability = Convert.ToInt32(result.Scores * 100), Region = GenRectangle(result.DecodedLocations) });
             }
             if (reslist.Count > 0)
                 ResultGenerated?.Invoke(this, new EventHandlers.ResultEventArgs(reslist));

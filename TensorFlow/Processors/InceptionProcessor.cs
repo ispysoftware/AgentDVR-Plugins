@@ -1,8 +1,8 @@
 ﻿using Emgu.TF;
 using Emgu.TF.Models;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 using Tensorflow;
 using static Plugins.EventHandlers;
@@ -71,7 +71,8 @@ namespace Plugins.Processors
             List<ResultEntry> reslist = new List<ResultEntry>();
             foreach(var result in results)
             {
-                reslist.Add(new ResultEntry() { Label = result[0].Label, Probability = Convert.ToInt32(result[0].Probability * 100) });
+                if (!double.IsNaN(result[0].Probability))
+                    reslist.Add(new ResultEntry() { Label = result[0].Label, Probability = Convert.ToInt32(result[0].Probability * 100) });
             }
             if (reslist.Count > 0)
                 ResultGenerated?.Invoke(this, new ResultEventArgs(reslist));
