@@ -12,7 +12,7 @@
         {
           "text": "Settings",
           "type": "Header",
-          "help": "Add an action on the camera for PLUGIN EVENT and use the tag {MSG} to retrieve the detected barcode. Use the menu above to choose the barcode types to look for."
+          "help": "Add an action on the camera for Barcode Recognized and use the tag {MSG} to retrieve the detected barcode. Use the menu above to choose the barcode types to look for."
         },
         {
           "text": "Interval",

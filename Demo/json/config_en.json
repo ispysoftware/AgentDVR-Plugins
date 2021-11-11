@@ -233,7 +233,7 @@
           "width": 320,
           "height": 240,
           "help": "Draw a rectangular area. Drag out to remove",
-          "bindto": "Example_Area",
+          "bindto": "Area",
           "max": 3
         }
       ]

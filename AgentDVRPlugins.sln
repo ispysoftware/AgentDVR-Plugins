@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barcode", "Barcode\Barcode.csproj", "{901697A9-455E-40AF-AEC2-A80EF90631BF}"
 EndProject
@@ -11,12 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gain", "Gain\Gain.csproj", 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PluginUtils", "PluginUtils\PluginUtils.shproj", "{C44A7120-65D6-4C1C-8DB6-CCF543AC496D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{5680B49A-19DF-41F3-A994-8EA8828457AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{5680B49A-19DF-41F3-A994-8EA8828457AF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{78A4154B-7DFA-43B1-A949-A3C3A89C4F35} = {78A4154B-7DFA-43B1-A949-A3C3A89C4F35}
 		{901697A9-455E-40AF-AEC2-A80EF90631BF} = {901697A9-455E-40AF-AEC2-A80EF90631BF}
 		{2FF8F0BE-304F-456E-9891-924D10553C57} = {2FF8F0BE-304F-456E-9891-924D10553C57}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TensorFlow", "TensorFlow\TensorFlow.csproj", "{F6B46FBC-8AA5-45A1-B422-712720FC7168}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -24,6 +26,7 @@ Global
 		PluginUtils\PluginUtils.projitems*{78a4154b-7dfa-43b1-a949-a3c3a89c4f35}*SharedItemsImports = 5
 		PluginUtils\PluginUtils.projitems*{901697a9-455e-40af-aec2-a80ef90631bf}*SharedItemsImports = 5
 		PluginUtils\PluginUtils.projitems*{c44a7120-65d6-4c1c-8db6-ccf543ac496d}*SharedItemsImports = 13
+		PluginUtils\PluginUtils.projitems*{f6b46fbc-8aa5-45a1-b422-712720fc7168}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +49,10 @@ Global
 		{5680B49A-19DF-41F3-A994-8EA8828457AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5680B49A-19DF-41F3-A994-8EA8828457AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5680B49A-19DF-41F3-A994-8EA8828457AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6B46FBC-8AA5-45A1-B422-712720FC7168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6B46FBC-8AA5-45A1-B422-712720FC7168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6B46FBC-8AA5-45A1-B422-712720FC7168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6B46FBC-8AA5-45A1-B422-712720FC7168}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

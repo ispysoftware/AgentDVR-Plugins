@@ -7,7 +7,7 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            var plugins = new string[] { "Demo", "Barcode", "Gain" };
+            var plugins = new string[] { "Demo", "Barcode", "Gain", "TensorFlow" };
             foreach (var plugin in plugins)
             {
                 var path = System.Reflection.Assembly.GetEntryAssembly().Location;

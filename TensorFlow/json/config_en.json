@@ -1,0 +1,74 @@
+﻿{
+    "header": "TensorFlow",
+    "okResult": "UploadJSON",
+    "name": "EditPluginConfiguration",
+    "origin": "Plugin",
+    "version": "VERSION",
+  "sections": [
+    {
+      "header": "General",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Settings",
+          "type": "Header"
+        },
+        {
+          "text": "Model",
+          "value": false,
+          "type": "Select",
+          "bindto": "Model",
+          "options": [
+            {
+              "text": "Inception",
+              "value": "Inception",
+              "noTranslate": true
+            },
+            {
+              "text": "MaskRcnnInceptionV2Coco",
+              "value": "MaskRcnnInceptionV2Coco",
+              "noTranslate": true
+            },
+            {
+              "text": "MultiboxGraph",
+              "value": "MultiboxGraph",
+              "noTranslate": true
+            },
+            {
+              "text": "Resnet",
+              "value": "Resnet",
+              "noTranslate": true
+            }
+          ]
+        },
+        {
+          "text": "Area",
+          "value": "",
+          "type": "ScreenAreaManager",
+          "width": 320,
+          "height": 240,
+          "help": "Draw a square area to monitor.",
+          "bindto": "Area",
+          "max": 1,
+          "makeSquare": true
+        },
+        {
+          "text": "Overlay Results",
+          "value": "",
+          "type": "Boolean",
+          "help": "Draw a square area to monitor.",
+          "bindto": "Overlay"
+        },
+        {
+          "text": "Minimum Confidence",
+          "value": "",
+          "type": "Slider",
+          "min": 0,
+          "max": 100,
+          "help": "Minimum percentage confidence.",
+          "bindto": "MinConfidence"
+        }
+      ]
+    }
+  ]
+}

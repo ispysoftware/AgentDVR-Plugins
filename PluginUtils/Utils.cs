@@ -185,6 +185,22 @@ namespace PluginUtils
             }
         }
 
+        /// <summary>
+        /// Scales a rectangle of percentages to frame coordinates
+        /// </summary>
+        /// <param name="R">The percentage based rectangle</param>
+        /// <param name="sz">Size of the frame</param>
+        /// <returns></returns>
+        public static Rectangle ScalePercentageRectangle(Rectangle R, Size sz)
+        {
+            double wmulti = Convert.ToDouble(sz.Width) / Convert.ToDouble(100);
+            double hmulti = Convert.ToDouble(sz.Height) / Convert.ToDouble(100);
+
+            return new Rectangle(Convert.ToInt32(R.X * wmulti),
+                                        Convert.ToInt32(R.Y * hmulti), Convert.ToInt32(R.Width * wmulti),
+                                        Convert.ToInt32(R.Height * hmulti));
+        }
+
         static void Populate(dynamic item, object o)
         {
             var bt = item["bindto"];
