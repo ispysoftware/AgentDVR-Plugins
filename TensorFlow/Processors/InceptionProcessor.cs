@@ -15,7 +15,7 @@ namespace Plugins.Processors
         public event EventHandlers.ProcessorEventHandler ProcessorReady;
         public event EventHandlers.ProcessorResultHandler ResultGenerated;
 
-        public Size SizeRequired => new Size(299, 299);
+        public Size SizeRequired => new Size(224, 224);//, 299);
 
 
         public async Task Init()
@@ -34,11 +34,31 @@ namespace Plugins.Processors
             model.OnDownloadProgressChanged += _inceptionGraph_OnDownloadProgressChanged; ;
             
             //use a retrained model to recognize flowers
-            await model.Init(
-                new string[] { "optimized_graph.pb", "output_labels.txt" },
-                "https://github.com/emgucv/models/raw/master/inception_flower_retrain/",
-                "Placeholder",
-                "final_result");
+           
+            try
+            {
+                //await model.Init(
+                //  new string[] { "optimized_graph.pb", "output_labels.txt" },
+                //  "https://github.com/emgucv/models/raw/master/inception_flower_retrain/",
+                //  "Placeholder",
+                //  "final_result");
+
+
+                await model.Init(null);
+                    //new string[] { "tensorflow_inception_graph.pb", "imagenet_comp_graph_label_strings.txt" },
+                    //"https://github.com/dotnet/machinelearning-samples/blob/main/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/"
+                    //,
+
+
+                    //, 
+                    //null);
+            }
+            catch (Exception ex)
+            {
+                var m = ex.Message;
+            }
+
+
 
             Ready = true;
             if (CloseWhenReady)

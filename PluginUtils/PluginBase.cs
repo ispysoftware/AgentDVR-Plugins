@@ -60,7 +60,21 @@ namespace PluginUtils
             return json;
         }
 
-        public List<ResultInfo> Results = new List<ResultInfo>();
+        private List<ResultInfo> _results = new List<ResultInfo>();
+        private static object ResultsLock = new object();  
+        public List<ResultInfo> Results
+        {
+            get
+            {
+                lock (ResultsLock)
+                    return _results;
+            }
+            set
+            {
+                lock(ResultsLock)  
+                    _results = value;   
+            }
+        }
 
         public string AppPath
         {

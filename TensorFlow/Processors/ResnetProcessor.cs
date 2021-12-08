@@ -115,6 +115,7 @@ namespace Plugins.Processors
                 if (!double.IsNaN(result[0].Probability))
                     reslist.Add(new ResultEntry() { Label = result[0].Label, Probability = Convert.ToInt32(result[0].Probability * 100)});
             }
+
             if (reslist.Count > 0)
                 ResultGenerated?.Invoke(this, new EventHandlers.ResultEventArgs(reslist));
         }

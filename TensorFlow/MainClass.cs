@@ -23,11 +23,11 @@ namespace Plugins
         private Font _drawFont;
         private bool _needUpdate = false;
         private ITensorProcessor _processor;
-        
+        private static readonly string[] fontfams = new[] { "Verdana", "Arial", "Helvetica", "Geneva", "FreeMono", "DejaVu Sans" };
+
         public Main() : base()
         {
-            //get cross platform font family
-            string[] fontfams = new[] { "Verdana", "Arial", "Helvetica", "Geneva", "FreeMono", "DejaVu Sans" };
+            //get cross platform font family           
             FontFamily fam = null;
             foreach (var fontfam in fontfams)
             {
@@ -217,7 +217,10 @@ namespace Plugins
                                 if (image.TryGetSinglePixelSpan(out var span))
                                 {
                                     float[] bgr = ConvertByteToFloat(MemoryMarshal.AsBytes(span).ToArray());
-                                    t = new Tensor(DataType.Float, new int[] { 1, _processor.SizeRequired.Width, _processor.SizeRequired.Height, 3 });
+
+                                    //t = new Tensor(DataType.Int8, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
+                                    //byte[] bgr = MemoryMarshal.AsBytes(span).ToArray();
+                                    t = new Tensor(DataType.Float, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
                                     Marshal.Copy(bgr, 0, t.DataPointer, bgr.Length);
                                 }
                                 else
@@ -255,17 +258,30 @@ namespace Plugins
         }
         private static float[] ConvertByteToFloat(byte[] array)
         {
-            float[] floatArr = new float[array.Length / 4];
-            for (int i = 0; i < floatArr.Length; i++)
+            float[] floatValues = new float[array.Length / 3];
+
+            int j = 0;
+            for (int i = 0; i < array.Length; i+=3)
             {
-                if (BitConverter.IsLittleEndian)
-                {
-                    Array.Reverse(array, i * 4, 4);
-                }
-                floatArr[i] = BitConverter.ToSingle(array, i * 4);
+                int v = Bytes2Int(array[i],array[i+1],array[i+2]);
+                floatValues[j] = v;
+                j++;
             }
-            return floatArr;
+            return floatValues;
         }
+
+        private static int Bytes2Int(byte b1, byte b2, byte b3)
+        {
+            int r = 0;
+            byte b0 = 0xff;
+
+            if ((b1 & 0x80) != 0) r |= b0 << 24;
+            r |= b1 << 16;
+            r |= b2 << 8;
+            r |= b3;
+            return r;
+        }
+
         private RectangleF TranslateToOriginalArea(RectangleF from, Rectangle source)
         {
             return new RectangleF(source.Left + from.Width * source.Width,source.Top + from.Height * source.Height, from.Width * source.Width,from.Height * source.Height);
