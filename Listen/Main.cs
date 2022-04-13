@@ -7,6 +7,7 @@ using PluginUtils;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NAudio.Wave;
+using System.Globalization;
 
 namespace Plugins
 {
@@ -22,6 +23,11 @@ namespace Plugins
         public Main(): base()
         {
             
+        }
+
+        public override List<string> GetCustomEvents()
+        {
+            return new List<string> { "Sound Detected", "Sound Recognized" };
         }
 
         public string Supports
@@ -139,6 +145,8 @@ namespace Plugins
             return rawData;
         }
 
+
+
         private InferenceSession modelSession = null;
 
         #region audio processing
@@ -159,15 +167,25 @@ namespace Plugins
             using (var results = modelSession.Run(container))
             {
                 var r = results.First().AsTensor<float>();
-                int prediction = MaxProbability(r);
+                int prediction = MaxProbability(r, out var max);
                 var c = Classes.First(p => p.id == prediction).name;
-                Console.WriteLine(c);                
+                var aijson = "{\"sound\":" + JsonConvert.ToString(c) + ",\"probability\": " + max.ToString(CultureInfo.InvariantCulture) + "}";
+                if (max * 100 >= ConfigObject.confidence)
+                {
+                    Results.Add(new ResultInfo("Sound Recognized", c, c, aijson));
+                    if (ConfigObject.alerts)
+                    {
+                        if ((","+ConfigObject.listenfor+",").Contains(","+c+","))
+                            Results.Add(new ResultInfo("alert", c, c, aijson));
+
+                    }
+                }
             }
         }
 
-        static int MaxProbability(Tensor<float> probabilities)
+        static int MaxProbability(Tensor<float> probabilities, out float max)
         {
-            float max = -9999.9F;
+            max = -9999.9F;
             int maxIndex = -1;
             for (int i = 0; i < probabilities.Length; ++i)
             {
@@ -187,6 +205,7 @@ namespace Plugins
 
         ~Main()
         {
+            modelSession?.Dispose();
             Dispose(false);
         }
 

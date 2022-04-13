@@ -17,6 +17,13 @@
               "live": true
             },
             {
+              "text": "Raise Alerts",
+              "value": false,
+              "type": "Boolean",
+              "bindto": "alerts",
+              "live": true
+            },
+            {
               "text": "Confidence",
               "value": 0,
               "type": "Slider",

@@ -4,7 +4,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element name="listenfor" type="xs:string" default=""/>
-        <xs:element name="enabled" type="xs:boolean" default="false"/>
+        <xs:element name="enabled" type="xs:boolean" default="true"/>
+		  <xs:element name="alerts" type="xs:boolean" default="true"/>
 		<xs:element name="confidence" type="xs:int" default="60"/>
       </xs:sequence>
     </xs:complexType>

@@ -28,11 +28,14 @@ public partial class configuration {
     
     private bool enabledField;
     
+    private bool alertsField;
+    
     private int confidenceField;
     
     public configuration() {
         this.listenforField = "";
-        this.enabledField = false;
+        this.enabledField = true;
+        this.alertsField = true;
         this.confidenceField = 60;
     }
     
@@ -53,6 +56,16 @@ public partial class configuration {
         }
         set {
             this.enabledField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public bool alerts {
+        get {
+            return this.alertsField;
+        }
+        set {
+            this.alertsField = value;
         }
     }
     
