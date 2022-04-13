@@ -13,12 +13,8 @@ namespace Plugins
 {
     public class Main : PluginBase, IMicrophone
     {
-        private const int AudioBufferLengthSec = 10;
-        private int audioOffset;
         private AudioFeatureBuffer featureBuffer = new AudioFeatureBuffer();
-        private bool _update;
-
-        
+               
 
         public Main(): base()
         {
@@ -41,7 +37,6 @@ namespace Plugins
         public override void SetConfiguration(string json)
         {
             base.SetConfiguration(json);
-            _update = true;
         }
         private static List<YamClass> _classes = null;
         private static List<YamClass> Classes
@@ -111,7 +106,7 @@ namespace Plugins
         {
             if (ConfigObject.enabled)
             {
-                //convert to float array
+                //convert to mono float array
                 List<float> _fsamples = new List<float>();
                 var skip = channels * 2;
                 for(var i = 0; i < rawData.Length; i+=skip)
@@ -170,6 +165,8 @@ namespace Plugins
                 int prediction = MaxProbability(r, out var max);
                 var c = Classes.First(p => p.id == prediction).name;
                 var aijson = "{\"sound\":" + JsonConvert.ToString(c) + ",\"probability\": " + max.ToString(CultureInfo.InvariantCulture) + "}";
+
+                Results.Add(new ResultInfo("Sound Detected", c, c, aijson));
                 if (max * 100 >= ConfigObject.confidence)
                 {
                     Results.Add(new ResultInfo("Sound Recognized", c, c, aijson));
