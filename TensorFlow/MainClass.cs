@@ -148,9 +148,9 @@ namespace Plugins
             return session.ListDevices(null);
         }
 
-        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
+        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
         {
-            //22050, one channel
+
             if (_processor?.Ready ?? false)
             {
                 if (_processor.IsAudio)
