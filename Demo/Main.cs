@@ -83,7 +83,7 @@ namespace Plugins
             }
         }
 
-        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
+        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
         {
             //22050, one channel
             CheckAlert();

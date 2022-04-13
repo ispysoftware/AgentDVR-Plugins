@@ -11,8 +11,9 @@ namespace PluginUtils
         /// </summary>
         /// <param name="rawData">byte array of the raw data from the microphone</param>
         /// <param name="bytesRecorded">The number of bytes in the rawData</param>
+        /// <param name="format">The audio format</param>
         /// <returns>The modified audio data</returns>
-        byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded);
+        byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels);
         /// <summary>
         /// Set the basic microphone information for use in the plugin
         /// </summary>

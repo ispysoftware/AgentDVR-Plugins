@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Plugins</RootNamespace>
+    <AssemblyName>Listen</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>DeveloperInABox</Authors>
+    <Description>Video Surveillance Software</Description>
+    <Copyright>2021 DeveloperInABox</Copyright>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="onnx\yamnet.onnx" />
+    <None Remove="onnx\yamnet_class_map.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="1.7.1" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.7.1" />
+    <PackageReference Include="NAudio.Core" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="json\config_en.json" />
+    <EmbeddedResource Include="onnx\yamnet.onnx" />
+    <EmbeddedResource Include="onnx\yamnet_class_map.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <Version>1.1.2</Version>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
+  </PropertyGroup>
+
+  <Target Name="PostBuildMacros">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="Targets" />
+    </GetAssemblyIdentity>
+    <ItemGroup>
+      <VersionNumber Include="$([System.String]::Copy('%(Targets.Version)').Replace('.','_'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" DependsOnTargets="PostBuildMacros">
+    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Listen\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Listen\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Listen_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
+  </Target>
+    
+  <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />
+</Project>

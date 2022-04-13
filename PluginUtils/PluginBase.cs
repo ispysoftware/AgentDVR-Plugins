@@ -28,7 +28,7 @@ namespace PluginUtils
                 return _configObject;
             }
         }
-        public string GetConfiguration(string languageCode)
+        public virtual string GetConfiguration(string languageCode)
         {
             //populate json
             dynamic d = Utils.PopulateResponse(ResourceLoader.LoadJson(languageCode), ConfigObject);

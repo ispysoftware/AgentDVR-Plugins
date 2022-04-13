@@ -32,7 +32,7 @@ namespace Plugins
             _update = true;
         }
 
-        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
+        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
         {
             byte[] truncArray = new byte[bytesRecorded];
 

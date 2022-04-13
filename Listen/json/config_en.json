@@ -1,0 +1,43 @@
+﻿{
+    "header": "Listen",
+    "okResult": "UploadJSON",
+    "name": "EditPluginConfiguration",
+    "origin": "Plugin",
+    "version": "VERSION",
+    "sections": [
+        {
+            "header": "Listen",
+            "displayType": "Form",
+          "items": [
+            {
+              "text": "Enabled",
+              "value": false,
+              "type": "Boolean",
+              "bindto": "enabled",
+              "live": true
+            },
+            {
+              "text": "Confidence",
+              "value": 0,
+              "type": "Slider",
+              "min": 0,
+              "max": 100,
+              "bindto": "confidence",
+              "help": "Minimum Confidence"
+            },
+            {
+              "text": "Listen For",
+              "value": "",
+              "type": "StringSelect",
+              "bindto": "listenfor",
+              "help": "Sounds to listen for",
+              "id": "txtListenFor",
+              "iddisp": "txtListenFor_disp",
+              "available": "YAMOBJECTS",
+              "translated": "OBJECTS_SELECTED"
+            }
+          ]
+        }
+        
+    ]
+}
