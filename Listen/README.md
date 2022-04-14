@@ -21,7 +21,11 @@ This plugin raises 2 events. One called "Sound Detected" and one called "Sound R
 
 Click OK. When the plugin recognises a sound you selected in the configuration that is above the confidence level you chose it will display the sound type in the Agent UI at the top left. 
 
-The Sound detected event is raised whenever the plugin recognizes a sound above your confidence threshold but it isn't in the **Listen For** list.
+You can also use {AIJSON} in your actions and Agent will pass through json that looks like: 
+
+{"sound":"whistling","probability": 0.55}
+
+The Sound Detected event is raised whenever the plugin recognizes a sound above your confidence threshold but it isn't in the **Listen For** list.
 
 General notes on creating plugins:
 
