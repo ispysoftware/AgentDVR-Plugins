@@ -6,14 +6,14 @@ namespace Plugins
 {
     class MelSpectrogram
     {
-        private double[] window;
-        private double[] melBands;
-        private double[] temp1;
-        private double[] temp2;
-        private int _fftLength;
-        private int _nMelBands;
-        private double _sampleRate;
-        private double _logOffset;
+        private readonly double[] window;
+        private readonly double[] melBands;
+        private readonly double[] temp1;
+        private readonly double[] temp2;
+        private readonly int _fftLength;
+        private readonly int _nMelBands;
+        private readonly double _sampleRate;
+        private readonly double _logOffset;
 
         public MelSpectrogram(
             int sampleRate = 16000,
@@ -169,29 +169,6 @@ namespace Plugins
                         xi[j + k + n] = ei - aoi;
                     }
                 }
-            }
-        }
-
-        private static void CFFTRef(double[] xr, double[] xi, int N)
-        {
-            double[] yr = new double[N];
-            double[] yi = new double[N];
-            for (int i = 0; i < N; i++)
-            {
-                double vr = 0.0;
-                double vi = 0.0;
-                for (int k = 0; k < N; k++)
-                {
-                    vr += Math.Cos(-2 * Math.PI * k * i / N) * xr[k];
-                    vi += Math.Sin(-2 * Math.PI * k * i / N) * xr[k];
-                }
-                yr[i] = vr;
-                yi[i] = vi;
-            }
-            for (int i = 0; i < N; i++)
-            {
-                xr[i] = yr[i];
-                xi[i] = yi[i];
             }
         }
     }
