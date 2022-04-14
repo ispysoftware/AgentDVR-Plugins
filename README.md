@@ -13,7 +13,7 @@ To use the plugin, add a device (camera and/or microphone) and edit it. See the 
 
 # IMPORTANT:
 
-If you are using an audio plugin like **Listen** on a camera you will need to edit the camera, select the **Audio** tab and click to configure the microphone. From there you can access the **Plugins** tab for audio devices. Alternatively you can click the **Server Icon**, **Edit Devices** and edit the microphone from that list.
+If you are using an audio plugin like [Listen](https://github.com/ispysoftware/AgentDVR-Plugins/tree/main/Listen) on a camera you will need to edit the camera, select the **Audio** tab and click to configure the microphone. From there you can access the **Plugins** tab for audio devices. Alternatively you can click the **Server Icon**, **Edit Devices** and edit the microphone from that list.
 
 # General notes on creating plugins:
 
