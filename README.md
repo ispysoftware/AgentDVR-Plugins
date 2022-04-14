@@ -4,7 +4,7 @@ Plugins for Agent DVR
 Download Agent DVR here:
 https://www.ispyconnect.com/download.aspx
 
-The easiest way to install plugins is to use the remote web portal. Access to this requires a subscription but a one-week free trial is available. When connected to the web portal click on the Server icon at top left and **Plugins** under **System**. Select the plugin you want to use in the drop-down at top-right and click **Install**.
+The easiest way to install plugins is to use the remote web portal. Access to this requires a subscription but a one-week free trial is available. When connected to the web portal click on the **Server icon** at top left and **Plugins** under **System**. Select the plugin you want to use in the drop-down at top-right and click **Install**.
 
 To install without using the web portal you will need to build the plugins from source and copy the built output to [AgentDVR Directory]/Plugins/PLUGINNAME
 
@@ -13,7 +13,7 @@ To use the plugin, add a device (camera and/or microphone) and edit it. See the 
 
 # IMPORTANT:
 
-If you are using an audio plugin like **Listen** on a camera you will need to edit the camera, select the **Audio** tab and click to configure the microphone. From there you can access the **Plugins** tab for audio devices.
+If you are using an audio plugin like **Listen** on a camera you will need to edit the camera, select the **Audio** tab and click to configure the microphone. From there you can access the **Plugins** tab for audio devices. Alternatively you can click the **Server Icon**, **Edit Devices** and edit the microphone from that list.
 
 # General notes on creating plugins:
 
