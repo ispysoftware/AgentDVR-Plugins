@@ -5,7 +5,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>DeveloperInABox</Authors>
     <Description>Video Surveillance Software</Description>
-    <Copyright>2021 DeveloperInABox</Copyright>
+    <Copyright>2022 DeveloperInABox</Copyright>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
@@ -35,8 +35,8 @@
   </ItemGroup>
   <PropertyGroup>
     <Version>1.1.2</Version>
-    <AssemblyVersion>1.1.2.0</AssemblyVersion>
-    <FileVersion>1.1.2.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <Target Name="PostBuildMacros">
@@ -49,7 +49,7 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" DependsOnTargets="PostBuildMacros">
-    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Listen\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Listen\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Listen_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
+    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Listen\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Listen\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;    powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Listen_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)&#xD;&#xA;" />
   </Target>
     
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />

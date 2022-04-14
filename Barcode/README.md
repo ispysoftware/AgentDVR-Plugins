@@ -9,6 +9,8 @@ https://github.com/ispysoftware/AgentDVR-Plugins
 
 The barcode plugin scans a camera feed once a second for barcodes and raises events in Agent DVR you can use to perform actions.
 
+This plugin is Windows Only.
+
 ![barcode_config](https://user-images.githubusercontent.com/800093/163331670-08364a2c-0ca7-47cf-a6b1-4d03f0c81517.png)
 
 Choose from the list of available barcode types. Be sure to only select the ones you are using to maximise performance.
