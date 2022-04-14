@@ -1,8 +1,11 @@
-# AgentDVR-Plugins
-Plugins for Agent DVR
+# AgentDVR-Plugins: Barcode Recognition
+
 
 Download Agent DVR here:
 https://www.ispyconnect.com/download.aspx
+
+See General information on plugins here:
+https://github.com/ispysoftware/AgentDVR-Plugins
 
 The barcode plugin scans a camera feed once a second for barcodes and raises events in Agent DVR you can use to perform actions.
 
