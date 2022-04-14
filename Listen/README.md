@@ -15,6 +15,8 @@ Set the minimum confidence level (from 0 = no confidence to 100 = certain) and c
 
 This plugin raises 2 events. One called "Sound Detected" and one called "Sound Recognized". To use this, edit the microphone and select the Actions tab. Under **If** choose "Listen: Sound Recognized". Under **Then** select "Show Message". Under **Message** enter {MSG}. Click OK. When the plugin recognises a sound you selected in the configuration that is above the confidence level you chose it will display the sound type in the Agent UI at the top left. 
 
+The Sound detected event is raised whenever the plugin recognizes a sound above your confidence threshold but it isn't in the **Listen For** list.
+
 General notes on creating plugins:
 
 https://www.ispyconnect.com/userguide-agent-plugins.aspx
