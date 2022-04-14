@@ -8,6 +8,8 @@ To install pre-built plugins you will need to use the remote web portal. Access 
 
 To install without using the web portal you will need to build the plugins from source and copy the built output to [AgentDVR Directory]/Plugins/PLUGINNAME
 
+To use the plugin, add a device (camera and/or microphone) and edit it. See the Plugins tab in the drop-down at top right. Choose your plugin and click the "..." button to configure it.
+
 General notes on creating plugins:
 
 Create/ Build a plugin and copy the built output to AgentDVR/Plugins/YourPluginName/
