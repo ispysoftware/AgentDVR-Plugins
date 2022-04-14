@@ -7,7 +7,9 @@ https://www.ispyconnect.com/download.aspx
 See General information on plugins here:
 https://github.com/ispysoftware/AgentDVR-Plugins
 
-The listen plugin uses machine learning to process live audio and recognise sounds. It raises events in Agent DVR you can use to perform actions.
+The listen plugin uses machine learning to process live audio and recognise sounds from a list of around 520 options. It raises events in Agent DVR you can use to perform actions.
+
+You could use this for notifications if your dog is barking or glass is smashed for example.
 
 ![listen](https://user-images.githubusercontent.com/800093/163334854-ff528a23-98b6-4faa-a253-7ecb0686d25e.png)
 
