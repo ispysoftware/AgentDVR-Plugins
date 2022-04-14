@@ -10,6 +10,11 @@
             "displayType": "Form",
           "items": [
             {
+              "text": "Settings",
+              "type": "Header",
+              "help": "Add an action on the microphone for Sound Recognized and use the tag {MSG} to retrieve the detected sound."
+            },
+            {
               "text": "Enabled",
               "value": false,
               "type": "Boolean",

@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace Plugins
 {
-    public class Main : PluginBase, ICamera, IMicrophone
+    public class Main : PluginBase, ICamera
     {
         private Font _drawFont;
         private bool _needUpdate = false;
@@ -46,7 +46,7 @@ namespace Plugins
         {
             get
             {
-                return "video,audio";
+                return "video";
             }
         }
 
@@ -146,21 +146,6 @@ namespace Plugins
             if (session == null)
                 return null;
             return session.ListDevices(null);
-        }
-
-        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
-        {
-
-            if (_processor?.Ready ?? false)
-            {
-                if (_processor.IsAudio)
-                {
-                    
-                }
-                
-            }
-
-            return rawData;
         }
 
         private Task _processorTask;

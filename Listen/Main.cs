@@ -101,7 +101,6 @@ namespace Plugins
         
         }
 
-       
         public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
         {
             if (ConfigObject.enabled)
@@ -149,7 +148,9 @@ namespace Plugins
         {
             if (modelSession == null)
             {
-                modelSession = new InferenceSession(ResourceLoader.GetResourceBytes("yamnet.onnx"));   
+                modelSession = new InferenceSession(ResourceLoader.GetResourceBytes("yamnet.onnx"));
+                //for gpu usage
+                //modelSession = new InferenceSession(ResourceLoader.GetResourceBytes("yamnet.onnx"), SessionOptions.MakeSessionOptionWithCudaProvider(0));
             }
 
             var inputMeta = modelSession.InputMetadata;
@@ -169,12 +170,13 @@ namespace Plugins
                 Results.Add(new ResultInfo("Sound Detected", c, c, aijson));
                 if (max * 100 >= ConfigObject.confidence)
                 {
-                    Results.Add(new ResultInfo("Sound Recognized", c, c, aijson));
-                    if (ConfigObject.alerts)
+                    if (("," + ConfigObject.listenfor + ",").Contains("," + c + ","))
                     {
-                        if ((","+ConfigObject.listenfor+",").Contains(","+c+","))
+                        Results.Add(new ResultInfo("Sound Recognized", c, c, aijson));
+                        if (ConfigObject.alerts)
+                        {
                             Results.Add(new ResultInfo("alert", c, c, aijson));
-
+                        }
                     }
                 }
             }

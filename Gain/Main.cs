@@ -31,6 +31,10 @@ namespace Plugins
             base.SetConfiguration(json);
             _update = true;
         }
+        public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded)
+        {
+            return ProcessAudioFrame(rawData, bytesRecorded, 22050, 1);
+        }
 
         public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
         {

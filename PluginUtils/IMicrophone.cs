@@ -7,13 +7,15 @@ namespace PluginUtils
     public interface IMicrophone: IPlugin
     {
         /// <summary>
-        /// Process incoming audio data from Agent. This will be in a fixed format of 22050Hz, one channel
+        /// Process incoming audio data from Agent.
         /// </summary>
         /// <param name="rawData">byte array of the raw data from the microphone</param>
         /// <param name="bytesRecorded">The number of bytes in the rawData</param>
-        /// <param name="format">The audio format</param>
+        /// <param name="samplerate">The audio samplerate</param>
+        /// <param name="channels">The number of channels</param>
         /// <returns>The modified audio data</returns>
         byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels);
+
         /// <summary>
         /// Set the basic microphone information for use in the plugin
         /// </summary>
