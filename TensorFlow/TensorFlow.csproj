@@ -28,7 +28,7 @@
 	<PackageReference Include="Emgu.TF.runtime.windows" Version="2.6.0.1294" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
+	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
     <PackageReference Include="Emgu.TF" Version="2.6.0.1294" />
     <PackageReference Include="Emgu.TF.Models" Version="2.6.0.1294" />
   </ItemGroup>

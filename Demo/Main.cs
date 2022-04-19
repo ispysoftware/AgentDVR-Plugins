@@ -23,10 +23,10 @@ namespace Plugins
             
             //get cross platform font family
             string[] fontfams = new[] { "Verdana", "Arial", "Helvetica", "Geneva", "FreeMono", "DejaVu Sans"};
-            FontFamily fam;
+            FontFamily fam = null;
             foreach(var fontfam in fontfams)
             {
-                if (SystemFonts.Collection.TryGet(fontfam, out fam))
+                if (SystemFonts.Collection.TryFind(fontfam, out fam))
                     break;
             }
             if (fam==null)

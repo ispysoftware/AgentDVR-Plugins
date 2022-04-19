@@ -29,10 +29,10 @@ namespace Plugins
         public Main() : base()
         {
             //get cross platform font family           
-            FontFamily fam;
+            FontFamily fam = null;
             foreach (var fontfam in fontfams)
             {
-                if (SystemFonts.Collection.TryGet(fontfam, out fam))
+                if (SystemFonts.TryFind(fontfam, out fam))
                     break;
             }
             if (fam == null)
