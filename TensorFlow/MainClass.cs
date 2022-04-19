@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp.Advanced;
 
 namespace Plugins
 {
@@ -28,10 +29,10 @@ namespace Plugins
         public Main() : base()
         {
             //get cross platform font family           
-            FontFamily fam = null;
+            FontFamily fam;
             foreach (var fontfam in fontfams)
             {
-                if (SystemFonts.Collection.TryFind(fontfam, out fam))
+                if (SystemFonts.Collection.TryGet(fontfam, out fam))
                     break;
             }
             if (fam == null)
@@ -194,27 +195,29 @@ namespace Plugins
                         var targetSize = _processor.SizeRequired == Size.Empty ? new Size(_area.Width,_area.Height) : _processor.SizeRequired;
                         unsafe
                         {
-                            var buffer = new ReadOnlySpan<byte>((void*)frame, stride * sz.Height);
-                            using (var image = Image.LoadPixelData<Bgr24>(buffer, sz.Width, sz.Height))
+                            using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
                             {
                                 image.Mutate(x => x.Resize(targetSize.Width, targetSize.Height, KnownResamplers.Bicubic,  _area, new Rectangle(0,0,sz.Width, sz.Height), true));
 
-                                if (image.TryGetSinglePixelSpan(out var span))
-                                {
-                                    float[] bgr = ConvertByteToFloat(MemoryMarshal.AsBytes(span).ToArray());
+                                //todo: use new sixlabors API to create tensor from resized image
 
-                                    //t = new Tensor(DataType.Int8, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
-                                    //byte[] bgr = MemoryMarshal.AsBytes(span).ToArray();
-                                    t = new Tensor(DataType.Float, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
-                                    Marshal.Copy(bgr, 0, t.DataPointer, bgr.Length);
-                                }
-                                else
-                                    return;
+                                //var mem = image.DangerousGetPixelRowMemory(y).Span;
+                                //if (image.DangerousTryGetSinglePixelMemory(out var span))
+                                //{
+                                //    //float[] bgr = ConvertByteToFloat(MemoryMarshal.AsBytes(span).ToArray());
+
+                                //    t = new Tensor(DataType.Int8, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
+                                //    byte[] bgr = MemoryMarshal.AsBytes(span).ToArray();
+                                //    //t = new Tensor(DataType.Float, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
+                                //    //Marshal.Copy(bgr, 0, t.DataPointer, bgr.Length);
+                                //}
+                                //else
+                                //    return;
 
                             }
                             
                         }
-                        _processorTask = Task.Run(()=>_processor.Recognise(t));
+                        //_processorTask = Task.Run(()=>_processor.Recognise(t));
                     }
                 }
             }
