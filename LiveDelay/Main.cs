@@ -70,6 +70,7 @@ namespace Plugins
 
         ~Main()
         {
+            DelayBuffer.Close();
             Dispose(false);
         }
     }

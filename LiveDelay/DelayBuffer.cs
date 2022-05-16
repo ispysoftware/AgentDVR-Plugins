@@ -88,5 +88,11 @@ namespace Plugins
             _videoQueue = new Queue<DelayBuffer>();
             BufferFull = false;
         }
+
+        public static void Close()
+        {
+            _audioQueue = null;
+            _videoQueue = null;
+        }
     }
 }
