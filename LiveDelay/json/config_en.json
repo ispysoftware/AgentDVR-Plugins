@@ -1,0 +1,27 @@
+﻿{
+    "header": "Live Delay",
+    "okResult": "UploadJSON",
+    "name": "EditPluginConfiguration",
+    "origin": "Plugin",
+    "version": "VERSION",
+  "sections": [
+    {
+      "header": "General",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Settings",
+          "type": "Header"
+        },
+        {
+          "text": "Delay",
+          "value": false,
+          "type": "Int32",
+          "bindto": "Delay",
+          "live": true,
+          "help": "Seconds to delay content"
+        }
+      ]
+    }
+  ]
+}
