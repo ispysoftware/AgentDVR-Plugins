@@ -72,7 +72,7 @@ namespace Plugins
                 using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
                 {
                     const string txt = "DELAYING...";
-                    FontRectangle size = TextMeasurer.Measure(txt, new RendererOptions(DrawFont));//, new TextOptions(font));          
+                    FontRectangle size = TextMeasurer.Measure(txt, new RendererOptions(DrawFont));
                     var box = new Rectangle(sz.Width/2 - (int)size.Width/2 - 5, sz.Height/2 - (int)size.Height/2 - 5 , (int)size.Width+ 10, (int) size.Height+10);
                     image.Mutate(x => x.Fill(Color.Red, box));
                     image.Mutate(x => x.DrawText(txt, DrawFont, Color.White, new PointF(box.X + 5, box.Y + 5)));

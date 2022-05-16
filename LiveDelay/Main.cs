@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
 using PluginUtils;
 using SixLabors.Fonts;
 using System.Linq;
@@ -23,7 +19,7 @@ namespace Plugins
                 if (SystemFonts.Collection.TryFind(fontfam, out fam))
                     break;
             }
-            if (fam==null)
+            if (fam == null)
             {
                 fam = SystemFonts.Collection.Families.First();
             }
