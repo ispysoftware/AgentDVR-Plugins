@@ -55,9 +55,12 @@ namespace PluginUtils
 
         public virtual string GetResultJSON()
         {
-            var json = JsonConvert.SerializeObject(Results);
-            Results.Clear();
-            return json;
+            lock (ResultsLock)
+            {
+                var json = JsonConvert.SerializeObject(Results);
+                Results.Clear();
+                return json;
+            }
         }
 
         private List<ResultInfo> _results = new List<ResultInfo>();

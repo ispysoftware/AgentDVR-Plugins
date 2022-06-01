@@ -16,6 +16,7 @@ namespace Plugins.Processors
         public event EventHandlers.ProcessorResultHandler ResultGenerated;
 
         public Size SizeRequired => new Size(224, 224);//, 299);
+        private bool _coldSession = true;
 
 
         public async Task Init()
@@ -44,14 +45,11 @@ namespace Plugins.Processors
                 //  "final_result");
 
 
-                await model.Init(null);
-                    //new string[] { "tensorflow_inception_graph.pb", "imagenet_comp_graph_label_strings.txt" },
-                    //"https://github.com/dotnet/machinelearning-samples/blob/main/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/"
-                    //,
-
-
-                    //, 
-                    //null);
+                await model.Init(
+                    new string[] { "tensorflow_inception_graph.pb", "imagenet_comp_graph_label_strings.txt" },
+                    "https://github.com/dotnet/machinelearning-samples/blob/main/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/", 
+                    null, 
+                    null);
             }
             catch (Exception ex)
             {

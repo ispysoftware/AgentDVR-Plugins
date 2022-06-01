@@ -16,6 +16,9 @@ using System.Text;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using SixLabors.ImageSharp.Advanced;
+using System.IO;
+using Emgu.TF.Models;
+using Emgu.Models;
 
 namespace Plugins
 {
@@ -197,27 +200,25 @@ namespace Plugins
                         {
                             using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
                             {
-                                image.Mutate(x => x.Resize(targetSize.Width, targetSize.Height, KnownResamplers.Bicubic,  _area, new Rectangle(0,0,sz.Width, sz.Height), true));
-
-                                //todo: use new sixlabors API to create tensor from resized image
-
-                                //var mem = image.DangerousGetPixelRowMemory(y).Span;
-                                //if (image.DangerousTryGetSinglePixelMemory(out var span))
-                                //{
-                                //    //float[] bgr = ConvertByteToFloat(MemoryMarshal.AsBytes(span).ToArray());
-
-                                //    t = new Tensor(DataType.Int8, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
-                                //    byte[] bgr = MemoryMarshal.AsBytes(span).ToArray();
-                                //    //t = new Tensor(DataType.Float, new int[] { 1, _processor.SizeRequired.Height, _processor.SizeRequired.Width, 3 });
-                                //    //Marshal.Copy(bgr, 0, t.DataPointer, bgr.Length);
-                                //}
-                                //else
-                                //    return;
-
+                                using (Image<Bgr24> copy = image.Clone(x => x.Resize(targetSize.Width, targetSize.Height, KnownResamplers.Bicubic, _area, new Rectangle(0, 0, targetSize.Width, targetSize.Height), true)))
+                                {
+                                    Memory<Bgr24> data;
+                                    if (copy.DangerousTryGetSinglePixelMemory(out data))
+                                    {
+                                        var bytes = MemoryMarshal.AsBytes(data.Span);
+                                        t = new Tensor(DataType.Float, new int[] { 1, targetSize.Height, targetSize.Width, 3 });
+                                        var dataPtr = t.DataPointer;
+                                        using (var mh = data.Pin())
+                                        {
+                                            var step = Emgu.TF.Util.Toolbox.Pixel24ToPixelFloat((IntPtr)mh.Pointer, targetSize.Width, targetSize.Height, 0, 1.0f / 255.0f, false, false, dataPtr);
+                                            _processorTask = Task.Run(() => _processor.Recognise(t));
+                                        }
+                                    }
+                                }
                             }
                             
                         }
-                        //_processorTask = Task.Run(()=>_processor.Recognise(t));
+                        //
                     }
                 }
             }
