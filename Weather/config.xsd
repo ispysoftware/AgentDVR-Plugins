@@ -16,6 +16,10 @@
 		<xs:element name="TempLimit" type="xs:int" default="40" />
 		<xs:element name="StatusEvent" type="xs:string" default=""/>
 		<xs:element name="DisplayType" type="xs:string" default="full"/>
+		<xs:element name="Format" type="xs:string" default="{icon}{main}: {description} 
+{wind} {gust} 
+{temp} {feelsLike} 
+{humidity} {uvi}"/>
 	  </xs:sequence>
     </xs:complexType>
   </xs:element>

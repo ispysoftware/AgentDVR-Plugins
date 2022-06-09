@@ -147,33 +147,12 @@
           "live": true
         },
         {
-          "text": "Display Type",
+          "text": "Format",
           "value": "0",
-          "type": "Select",
-          "bindto": "DisplayType",
-          "options": [
-            {
-              "text": "Full",
-              "value": "full"
-            },
-            {
-              "text": "Line",
-              "value": "line"
-            },
-            {
-              "text": "Column",
-              "value": "column"
-            },
-            {
-              "text": "Icon Only",
-              "value": "icon"
-            },
-            {
-              "text": "Minimal",
-              "value": "minimal"
-            }
-          ],
-          "live": true
+          "type": "TextArea",
+          "bindto": "Format",
+          "live": true,
+          "help": "String format for weather info. Available tags: {icon} {main} {description} {wind} {gust} {temp} {feelsLike} {humidity} {uvi}"
         }
       ]
     },

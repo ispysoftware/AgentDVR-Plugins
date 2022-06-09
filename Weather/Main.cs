@@ -267,29 +267,23 @@ namespace Plugins
                             if (HasKey(data.current, "uvi")) //not always available
                                 uvi = data.current.uvi.ToString();
 
-                            switch(ConfigObject.DisplayType)
-                            {
-                                case "minimal":
-                                    _weather = new string[] { (main + " " + wind + " " + temp + " " + humidity + " " + uvi).Trim() };
-                                    Icon = null;
-                                    break;
-                                case "line":
-                                    _weather = new string[] { main + ": Wind: " + wind + " Temp: " + temp + " Hum: " + humidity + (uvi != "" ? " UVI: " + uvi : "") };
-                                    Icon = null;
-                                    break;
-                                case "column":
-                                    _weather = new string[] { wind,temp,humidity,uvi };
-                                    Icon = null;
-                                    break;
-                                case "icon":
-                                    _weather = new string[] { };
-                                    Icon = Image.Load(ResourceLoader.GetResourceBytes(icn + ".png"));
-                                    break;
-                                default:
-                                    _weather = new string[] { main + ": " + description, "Wind: " + wind + " Gust: " + gust, "Temp: " + temp + " Feels Like:" + feelsLike, "Humidity: " + humidity + (uvi != "" ? " UVI: " + uvi : "") };
-                                    Icon = Image.Load(ResourceLoader.GetResourceBytes(icn + ".png"));
-                                    break;
-                            }
+                            string format = ConfigObject.Format.Replace("\r\n","\n");
+                            if (format.Contains("{icon}"))
+                                Icon = Image.Load(ResourceLoader.GetResourceBytes(icn + ".png"));
+                            else
+                                Icon = null;
+
+                            format = format.Replace("{icon}", "");
+                            format = format.Replace("{main}", main);
+                            format = format.Replace("{description}", description);
+                            format = format.Replace("{wind}", wind);
+                            format = format.Replace("{gust}", gust);
+                            format = format.Replace("{temp}", temp);
+                            format = format.Replace("{feelsLike}", feelsLike);
+                            format = format.Replace("{humidity}", humidity);
+                            format = format.Replace("{uvi}", uvi);
+
+                            _weather = format.Split('\n');
                             
 
 
@@ -358,7 +352,7 @@ namespace Plugins
                     var icn = Icon;
                     var size = MeasureText(Weather, 3, 3, out int[] lw, out int[] lh);
 
-                    System.Drawing.Size sz = new System.Drawing.Size((int)size.Width + (icn?.Width??0), Math.Max((int)size.Height, icn?.Height??0));
+                    System.Drawing.Size sz = new System.Drawing.Size((int)size.Width + (icn?.Width??0), Math.Max((int)size.Height+3, icn?.Height??0));
                     var pos = GetOverlayLocation(imageSize, sz, (OverlayLocation)ConfigObject.Position);
                     var box = new Rectangle(pos.X,pos.Y, sz.Width, sz.Height);
                     if (ConfigObject.DisplayBackground)

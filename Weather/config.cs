@@ -50,6 +50,8 @@ public partial class configuration {
     
     private string displayTypeField;
     
+    private string formatField;
+    
     public configuration() {
         this.aPIKeyField = "";
         this.latLngField = "";
@@ -64,6 +66,8 @@ public partial class configuration {
         this.tempLimitField = 40;
         this.statusEventField = "";
         this.displayTypeField = "full";
+        this.formatField = "{icon} {main}: {description}\r\nWind:{wind} Gust:{gust}\r\nTemp:{temp} Feels Like:{fe" +
+            "elsLike}\r\nHumidity:{humidity} UVI:{uvi}";
     }
     
     /// <remarks/>
@@ -193,6 +197,16 @@ public partial class configuration {
         }
         set {
             this.displayTypeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string Format {
+        get {
+            return this.formatField;
+        }
+        set {
+            this.formatField = value;
         }
     }
 }
