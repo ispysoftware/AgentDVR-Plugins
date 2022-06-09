@@ -1,0 +1,268 @@
+﻿{
+  "header": "Weather",
+  "okResult": "UploadJSON",
+  "name": "EditPluginConfiguration",
+  "origin": "Plugin",
+  "version": "VERSION",
+  "sections": [
+    {
+      "header": "General",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Settings",
+          "type": "Header"
+        },
+        {
+          "text": "API Key",
+          "value": "",
+          "type": "String",
+          "bindto": "APIKey",
+          "live": true,
+          "help": "API key from <a href=\"https://openweathermap.org/\" target=\"_blank\">openweathermap.org</a>"
+        },
+        {
+          "text": "Lat, Lng",
+          "value": "",
+          "type": "TextButton",
+          "action": "getLocation",
+          "id": "txtLatLng",
+          "bindto": "LatLng",
+          "live": true,
+          "help": "Latitude and Longitude eg: -33.8649255,155.0023731"
+        },
+        {
+          "text": "Update Frequency",
+          "value": "",
+          "type": "Slider",
+          "range": false,
+          "min": 1,
+          "max": 600,
+          "bindto": "UpdateFrequency",
+          "live": true,
+          "help": "(Seconds)"
+        },
+        {
+          "text": "Units",
+          "value": "0",
+          "type": "Select",
+          "bindto": "Units",
+          "options": [
+            {
+              "text": "Standard",
+              "value": "standard"
+            },
+            {
+              "text": "Metric",
+              "value": "metric"
+            },
+            {
+              "text": "Imperial",
+              "value": "imperial"
+            }
+          ],
+          "live": true
+        },
+        {
+          "text": "Font Size",
+          "value": "",
+          "type": "Int32",
+          "range": false,
+          "min": 8,
+          "max": 100,
+          "bindto": "FontSize",
+          "live": true
+        },
+        {
+          "text": "Foreground",
+          "value": "",
+          "type": "Color",
+          "range": false,
+          "min": 8,
+          "max": 100,
+          "bindto": "Foreground",
+          "live": true
+        },
+        {
+          "text": "Background",
+          "value": "",
+          "type": "Color",
+          "bindto": "Background",
+          "live": true
+        },
+        {
+          "text": "Show Background",
+          "value": "",
+          "type": "Boolean",
+          "bindto": "DisplayBackground",
+          "live": true
+        },
+        {
+          "text": "Position",
+          "value": "0",
+          "type": "Select",
+          "bindto": "Position",
+          "options": [
+            {
+              "text": "None",
+              "value": 0
+            },
+            {
+              "text": "Top Left",
+              "value": 1
+            },
+            {
+              "text": "Top Center",
+              "value": 2
+            },
+            {
+              "text": "Top Right",
+              "value": 3
+            },
+            {
+              "text": "Left",
+              "value": 7
+            },
+            {
+              "text": "Middle",
+              "value": 8
+            },
+            {
+              "text": "Right",
+              "value": 9
+            },
+            {
+              "text": "Bottom Left",
+              "value": 4
+            },
+            {
+              "text": "Bottom Center",
+              "value": 5
+            },
+            {
+              "text": "Bottom Right",
+              "value": 6
+            }
+          ],
+          "live": true
+        },
+        {
+          "text": "Display Type",
+          "value": "0",
+          "type": "Select",
+          "bindto": "DisplayType",
+          "options": [
+            {
+              "text": "Full",
+              "value": "full"
+            },
+            {
+              "text": "Line",
+              "value": "line"
+            },
+            {
+              "text": "Column",
+              "value": "column"
+            },
+            {
+              "text": "Icon Only",
+              "value": "icon"
+            },
+            {
+              "text": "Minimal",
+              "value": "minimal"
+            }
+          ],
+          "live": true
+        }
+      ]
+    },
+    {
+      "header": "Events",
+      "displayType": "Form",
+      "help": "Generate temperature and gust events if greater than a set limit or if the main status changes. See actions in the camera to respond to these events.",
+      "items": [
+        {
+          "text": "Temperature Limit",
+          "value": "",
+          "type": "Int32",
+          "bindto": "TempLimit"
+        },
+        {
+          "text": "Gust Limit",
+          "value": "",
+          "type": "Int32",
+          "bindto": "GustLimit"
+        },
+        {
+          "text": "Status",
+          "value": "",
+          "type": "Select",
+          "bindto": "StatusEvent",
+          "options": [
+            {
+              "text": "None",
+              "value": ""
+            },
+            {
+              "text": "Ash",
+              "value": "Ash"
+            },
+            {
+              "text": "Clouds",
+              "value": "Clouds"
+            },
+            {
+              "text": "Drizzle",
+              "value": "Drizzle"
+            },
+            {
+              "text": "Dust",
+              "value": "Dust"
+            },
+            {
+              "text": "Fog",
+              "value": "Fog"
+            },
+            {
+              "text": "Haze",
+              "value": "Haze"
+            },
+            {
+              "text": "Mist",
+              "value": "Mist"
+            },
+            {
+              "text": "Rain",
+              "value": "Rain"
+            },
+            {
+              "text": "Sand",
+              "value": "Sand"
+            },
+            {
+              "text": "Smoke",
+              "value": "Smoke"
+            },
+            {
+              "text": "Snow",
+              "value": "Snow"
+            },
+            {
+              "text": "Squall",
+              "value": "Squall"
+            },
+            {
+              "text": "Thunderstorm",
+              "value": "Thunderstorm"
+            },
+            {
+              "text": "Tornado",
+              "value": "Tornado"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

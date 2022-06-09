@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Listen", "Listen\Listen.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveDelay", "LiveDelay\LiveDelay.csproj", "{1A501145-8EE5-4D47-A996-C72973070593}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weather", "Weather\Weather.csproj", "{E6859106-3404-4929-9C83-628822D9E158}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		PluginUtils\PluginUtils.projitems*{1a501145-8ee5-4d47-a996-c72973070593}*SharedItemsImports = 5
@@ -32,6 +34,7 @@ Global
 		PluginUtils\PluginUtils.projitems*{78a4154b-7dfa-43b1-a949-a3c3a89c4f35}*SharedItemsImports = 5
 		PluginUtils\PluginUtils.projitems*{901697a9-455e-40af-aec2-a80ef90631bf}*SharedItemsImports = 5
 		PluginUtils\PluginUtils.projitems*{c44a7120-65d6-4c1c-8db6-ccf543ac496d}*SharedItemsImports = 13
+		PluginUtils\PluginUtils.projitems*{e6859106-3404-4929-9c83-628822d9e158}*SharedItemsImports = 5
 		PluginUtils\PluginUtils.projitems*{f6b46fbc-8aa5-45a1-b422-712720fc7168}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +70,10 @@ Global
 		{1A501145-8EE5-4D47-A996-C72973070593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A501145-8EE5-4D47-A996-C72973070593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A501145-8EE5-4D47-A996-C72973070593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6859106-3404-4929-9C83-628822D9E158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6859106-3404-4929-9C83-628822D9E158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6859106-3404-4929-9C83-628822D9E158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6859106-3404-4929-9C83-628822D9E158}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
