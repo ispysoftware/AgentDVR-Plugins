@@ -22,7 +22,9 @@ namespace Plugins
         private DateTime _lastWeatherUpdate = DateTime.MinValue;
         private Color _foreGround = Color.White, _backGround = Color.Black;
         private bool _gustLimit, _tempLimit, _statusLimit;
-        
+        private string _error = "";
+
+
         public Main():base()
         {
             
@@ -127,7 +129,10 @@ namespace Plugins
                     _lastWeatherUpdate = DateTime.UtcNow;
                     _=Task.Run(() => UpdateWeather());
                 }
-                return _weather;
+                var w = _weather.ToList();
+                if (!string.IsNullOrEmpty(_error))
+                    w.Add("Error: "+_error);
+                return w.ToArray();
             }
         }
 
@@ -284,15 +289,17 @@ namespace Plugins
                             format = format.Replace("{uvi}", uvi);
 
                             _weather = format.Split('\n');
-                            
 
+                            _error = "";
 
                         }
                     }
                     catch(Exception ex)
                     {
-                        _weather = new[] { ex.Message };
-                        Icon = null;
+                        //service down?
+                        _error = ex.Message;
+                        //_weather = new[] { ex.Message };
+                        //Icon = null;
                     }
                     
                 }

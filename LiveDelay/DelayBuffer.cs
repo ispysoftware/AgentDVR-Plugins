@@ -48,7 +48,10 @@ namespace Plugins
             if (BufferSeconds == 0)
                 return;
             byte[] data = new byte[stride * sz.Height];
+            if (frame == null || data.Length <= 0)
+                return;
             Marshal.Copy(frame,data,0,data.Length);
+            
             _videoQueue.Enqueue(new DelayBuffer(data));
 
             if (!BufferFull)
