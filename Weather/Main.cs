@@ -224,15 +224,22 @@ namespace Plugins
 
                             string main = "unknown";
                             var description = "unknown";
+                            var gust = "unknown";
                            
                             main = data.current.weather[0].main.ToString();
                             description = data.current.weather[0].description.ToString();
                             
                             var wind = data.current.wind_speed.ToString() + SpeedUnit;
-                            var gust = data.current.wind_gust.ToString() + SpeedUnit;
+                            double dGust = -1;
+                            if (HasKey(data, "current.wind_gust")) //not always available
+                            {
+                                gust = data.current.wind_gust.ToString() + SpeedUnit;
+                                double.TryParse(data.current.wind_gust.ToString(), out dGust);
+                            }
+
                             var temp = data.current.temp.ToString() + TempUnit;
 
-                            double.TryParse(data.current.wind_gust.ToString(), out double dGust);
+                            
                             double.TryParse(data.current.temp.ToString(), out double dTemp);
 
                             if (dGust > ConfigObject.GustLimit)
