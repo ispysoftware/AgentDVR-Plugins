@@ -23,16 +23,18 @@ namespace Plugins
             
             //get cross platform font family
             string[] fontfams = new[] { "Verdana", "Arial", "Helvetica", "Geneva", "FreeMono", "DejaVu Sans"};
-            FontFamily fam = null;
-            foreach(var fontfam in fontfams)
+            var ff = false;
+            FontFamily fam;
+            foreach (var fontfam in fontfams)
             {
-                if (SystemFonts.Collection.TryFind(fontfam, out fam))
+                if (SystemFonts.Collection.TryGet(fontfam, out fam))
+                {
+                    ff = true;
                     break;
+                }
             }
-            if (fam==null)
-            {
+            if (!ff)
                 fam = SystemFonts.Collection.Families.First();
-            }
 
             _drawFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
             _wirepen = Pens.Solid(Color.Green, 3);

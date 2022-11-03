@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net;
+using System.Xml.Linq;
 
 namespace Plugins
 {
@@ -30,16 +31,20 @@ namespace Plugins
             
             //get cross platform font family
             string[] fontfams = new[] { "Verdana", "Arial", "Helvetica", "Geneva", "FreeMono", "DejaVu Sans"};
-            FontFamily fam = null;
-            foreach(var fontfam in fontfams)
+
+
+            var ff = false;
+            FontFamily fam;
+            foreach (var fontfam in fontfams)
             {
-                if (SystemFonts.Collection.TryFind(fontfam, out fam))
+                if (SystemFonts.Collection.TryGet(fontfam, out fam))
+                {
+                    ff = true;
                     break;
+                }
             }
-            if (fam==null)
-            {
+            if (!ff)
                 fam = SystemFonts.Collection.Families.First();
-            }
 
             _drawFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
         }
@@ -323,7 +328,7 @@ namespace Plugins
 
             for (int i = 0; i < txtArr.Length; i++)
             {
-                FontRectangle size = TextMeasurer.Measure(txtArr[i], new RendererOptions(_drawFont));
+                FontRectangle size = TextMeasurer.Measure(txtArr[i], new TextOptions(_drawFont));
                 lineWidths[i] = (int)size.Width + xPadding;
                 lineHeights[i] = (int)size.Height + yPadding;
                 w = Math.Max(lineWidths[i], w);
