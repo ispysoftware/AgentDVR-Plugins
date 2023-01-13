@@ -32,6 +32,7 @@
 	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
     <PackageReference Include="Emgu.TF" Version="2.6.0.1294" />
     <PackageReference Include="Emgu.TF.Models" Version="2.6.0.1294" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />
