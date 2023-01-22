@@ -5,8 +5,9 @@
       <xs:sequence>
         <xs:element name="APIKey" type="xs:string" default=""/>
 		<xs:element name="LatLng" type="xs:string" default=""/>
-		<xs:element name="UpdateFrequency" type="xs:int" default="10"/>		  
+		<xs:element name="UpdateFrequency" type="xs:int" default="3600"/>		  
 		<xs:element name="FontSize" type="xs:int" default="12" />
+    <xs:element name="APIversion" type="xs:string" default="3.0" />
 		<xs:element name="Foreground" type="xs:string" default="#ffffff" />
 		<xs:element name="Background" type="xs:string" default="#202020" />
 		<xs:element name="DisplayBackground" type="xs:boolean" default="true" />

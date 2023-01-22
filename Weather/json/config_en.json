@@ -22,11 +22,27 @@
           "help": "API key from <a href=\"https://openweathermap.org/\" target=\"_blank\">openweathermap.org</a>"
         },
         {
+          "text": "API Version",
+          "value": "0",
+          "type": "Select",
+          "bindto": "APIVersion",
+          "options": [
+            {
+              "text": "3.0",
+              "value": "3.0"
+            },
+            {
+              "text": "2.0",
+              "value": "2.0"
+            }
+          ],
+          "live": true,
+          "help": "OpenWeatherMap only supports v2.0 with old accounts. New accounts need to use v3.0 and create a subscription on openweathermap.org (with a free quota)."
+        },
+        {
           "text": "Lat, Lng",
           "value": "",
-          "type": "TextButton",
-          "action": "getLocation",
-          "id": "txtLatLng",
+          "type": "MapControl",
           "bindto": "LatLng",
           "live": true,
           "help": "Latitude and Longitude eg: -33.8649255,155.0023731"
@@ -37,7 +53,7 @@
           "type": "Slider",
           "range": false,
           "min": 1,
-          "max": 600,
+          "max": 1200,
           "bindto": "UpdateFrequency",
           "live": true,
           "help": "(Seconds)"

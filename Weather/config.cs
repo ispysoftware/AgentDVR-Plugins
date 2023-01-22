@@ -32,6 +32,8 @@ public partial class configuration {
     
     private int fontSizeField;
     
+    private string aPIversionField;
+    
     private string foregroundField;
     
     private string backgroundField;
@@ -57,6 +59,7 @@ public partial class configuration {
         this.latLngField = "";
         this.updateFrequencyField = 10;
         this.fontSizeField = 12;
+        this.aPIversionField = "3.0";
         this.foregroundField = "#ffffff";
         this.backgroundField = "#202020";
         this.displayBackgroundField = true;
@@ -66,8 +69,8 @@ public partial class configuration {
         this.tempLimitField = 40;
         this.statusEventField = "";
         this.displayTypeField = "full";
-        this.formatField = "{icon} {main}: {description}\r\nWind:{wind} Gust:{gust}\r\nTemp:{temp} Feels Like:{fe" +
-            "elsLike}\r\nHumidity:{humidity} UVI:{uvi}";
+        this.formatField = "{icon}{main}: {description} \r\n{wind} {gust} \r\n{temp} {feelsLike} \r\n{humidity} {uv" +
+            "i}";
     }
     
     /// <remarks/>
@@ -107,6 +110,16 @@ public partial class configuration {
         }
         set {
             this.fontSizeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string APIversion {
+        get {
+            return this.aPIversionField;
+        }
+        set {
+            this.aPIversionField = value;
         }
     }
     

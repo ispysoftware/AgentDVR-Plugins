@@ -209,7 +209,8 @@ namespace Plugins
                 if (latlng.Length > 1)
                 {
                     //3.0 not working
-                    var url = $"https://api.openweathermap.org/data/2.5/onecall?lat={latlng[0]}&lon={latlng[1]}&exclude=minutely,hourly,daily&appid={ConfigObject.APIKey}&units={ConfigObject.Units}";
+                    string apiver = ConfigObject.APIversion;
+                    var url = $"https://api.openweathermap.org/data/{apiver}/onecall?lat={latlng[0]}&lon={latlng[1]}&exclude=minutely,hourly,daily&appid={ConfigObject.APIKey}&units={ConfigObject.Units}";
                     
                     try
                     {
