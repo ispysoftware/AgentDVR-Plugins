@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Plugins</RootNamespace>
     <AssemblyName>Weather</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -62,6 +61,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
   
   <Target Name="PostBuildMacros">

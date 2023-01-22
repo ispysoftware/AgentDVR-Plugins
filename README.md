@@ -6,10 +6,9 @@ https://www.ispyconnect.com/download.aspx
 
 The easiest way to install plugins is to use the remote web portal. Access to this requires a subscription but a one-week free trial is available. When connected to the web portal click on the **Server icon** at top left and **Plugins** under **System**. Select the plugin you want to use in the drop-down at top-right and click **Install**.
 
-To install without using the web portal you will need to build the plugins from source and copy the built output to [AgentDVR Directory]/Plugins/PLUGINNAME
+To install without using the web portal you will need to build the plugins from source and copy the built output to [AgentDVR Directory]/Plugins/PLUGINNAME. You must create the `Plugins` directory if it does not exist.
 
 To use the plugin, add a device (camera and/or microphone) and edit it. See the Plugins tab in the drop-down at top right. Choose your plugin and click the "..." button to configure it. 
-
 
 # IMPORTANT:
 
