@@ -10,7 +10,19 @@
       "displayType": "Form",
       "items": [
         {
-          "text": "Settings",
+          "text": "Data Endpoint",
+          "type": "Header"
+        },
+        {
+          "text": "URL",
+          "value": "",
+          "type": "String",
+          "bindto": "URL",
+          "live": true,
+          "help": "Enter a URL to the weather endpoint or leave this blank and use the options below to configure one. "
+        },
+        {
+          "text": "OR Use OneCall:",
           "type": "Header"
         },
         {
@@ -46,6 +58,10 @@
           "bindto": "LatLng",
           "live": true,
           "help": "Latitude and Longitude eg: -33.8649255,155.0023731"
+        },
+        {
+          "text": "Settings",
+          "type": "Header"
         },
         {
           "text": "Update Frequency",
@@ -168,7 +184,7 @@
           "type": "TextArea",
           "bindto": "Format",
           "live": true,
-          "help": "String format for weather info. Available tags: {icon} {main} {description} {wind} {gust} {temp} {feelsLike} {humidity} {uvi}"
+          "help": "String format for weather info. Available tags: {icon} {main} {description} {wind} {windDir} {windDeg} {gust} {temp} {feelsLike} {humidity} {uvi}"
         }
       ]
     },

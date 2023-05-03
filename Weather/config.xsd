@@ -4,6 +4,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element name="APIKey" type="xs:string" default=""/>
+    <xs:element name="URL" type="xs:string" default=""/>
 		<xs:element name="LatLng" type="xs:string" default=""/>
 		<xs:element name="UpdateFrequency" type="xs:int" default="3600"/>		  
 		<xs:element name="FontSize" type="xs:int" default="12" />
@@ -18,7 +19,7 @@
 		<xs:element name="StatusEvent" type="xs:string" default=""/>
 		<xs:element name="DisplayType" type="xs:string" default="full"/>
 		<xs:element name="Format" type="xs:string" default="{icon}{main}: {description} 
-{wind} {gust} 
+{wind} {windDir} {gust} 
 {temp} {feelsLike} 
 {humidity} {uvi}"/>
 	  </xs:sequence>

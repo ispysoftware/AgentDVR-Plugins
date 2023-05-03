@@ -26,6 +26,8 @@ public partial class configuration {
     
     private string aPIKeyField;
     
+    private string uRLField;
+    
     private string latLngField;
     
     private int updateFrequencyField;
@@ -56,8 +58,9 @@ public partial class configuration {
     
     public configuration() {
         this.aPIKeyField = "";
+        this.uRLField = "";
         this.latLngField = "";
-        this.updateFrequencyField = 10;
+        this.updateFrequencyField = 3600;
         this.fontSizeField = 12;
         this.aPIversionField = "3.0";
         this.foregroundField = "#ffffff";
@@ -69,8 +72,8 @@ public partial class configuration {
         this.tempLimitField = 40;
         this.statusEventField = "";
         this.displayTypeField = "full";
-        this.formatField = "{icon}{main}: {description} \r\n{wind} {gust} \r\n{temp} {feelsLike} \r\n{humidity} {uv" +
-            "i}";
+        this.formatField = "{icon}{main}: {description} \r\n{wind} {windDir} {gust} \r\n{temp} {feelsLike} \r\n{hum" +
+            "idity} {uvi}";
     }
     
     /// <remarks/>
@@ -80,6 +83,16 @@ public partial class configuration {
         }
         set {
             this.aPIKeyField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string URL {
+        get {
+            return this.uRLField;
+        }
+        set {
+            this.uRLField = value;
         }
     }
     

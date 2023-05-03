@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net;
 using System.Xml.Linq;
+using SixLabors.ImageSharp.Processing.Processors.Transforms;
 
 namespace Plugins
 {
@@ -203,39 +204,56 @@ namespace Plugins
         }
         private void UpdateWeather()
         {
-            if (!string.IsNullOrEmpty(ConfigObject.APIKey))
+            string url = "";
+            if (!string.IsNullOrEmpty(ConfigObject.URL))
             {
-                var latlng = ConfigObject.LatLng.Split(',');
-                if (latlng.Length > 1)
+                url = ConfigObject.URL;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(ConfigObject.APIKey))
                 {
-                    //3.0 not working
-                    string apiver = ConfigObject.APIversion;
-                    var url = $"https://api.openweathermap.org/data/{apiver}/onecall?lat={latlng[0]}&lon={latlng[1]}&exclude=minutely,hourly,daily&appid={ConfigObject.APIKey}&units={ConfigObject.Units}";
-                    
-                    try
+                    var latlng = ConfigObject.LatLng.Split(',');
+                    if (latlng.Length > 1)
                     {
-                        var c = new WebClient().DownloadString(url);
-                        dynamic data = JsonConvert.DeserializeObject(c);
+                        //3.0 not working
+                        string apiver = ConfigObject.APIversion;
+                        url = $"https://api.openweathermap.org/data/{apiver}/onecall?lat={latlng[0]}&lon={latlng[1]}&exclude=minutely,hourly,daily&appid={ConfigObject.APIKey}&units={ConfigObject.Units}";
+                    }
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(url))
+            {
+                try
+                {
+                    var c = new WebClient().DownloadString(url);
+                    dynamic data = JsonConvert.DeserializeObject(c);
 
-                        if (HasKey(data,"message"))
-                        {
-                            //error
-                            _weather = new string[] { "error: " + data["message"].ToString() };
-                            Icon = null;
-                        }
-                        else
-                        {
-                            string icn = data.current.weather[0].icon.ToString();
-                            
+                    if (HasKey(data, "message"))
+                    {
+                        //error
+                        _weather = new string[] { "error: " + data["message"].ToString() };
+                        Icon = null;
+                    }
+                    else
+                    {
+                        string icn = "";
+                        string main = "unknown";
+                        string description = "unknown";
+                        string gust = "";
+                        string wind = "unknown";
+                        string temp ="", feelsLike="", humidity="", uvi="";
+                        int wind_deg = 0;
 
-                            string main = "unknown";
-                            var description = "unknown";
-                            var gust = "unknown";
-                           
+                        if (HasKey(data, "current"))
+                        {
+                            icn = data.current.weather[0].icon.ToString();
                             main = data.current.weather[0].main.ToString();
                             description = data.current.weather[0].description.ToString();
-                            
-                            var wind = data.current.wind_speed.ToString() + SpeedUnit;
+
+                            wind = data.current.wind_speed.ToString() + SpeedUnit;
+                            wind_deg = Convert.ToInt32(data.current.wind_deg.ToString());
                             double dGust = -1;
                             if (HasKey(data, "current.wind_gust")) //not always available
                             {
@@ -243,9 +261,9 @@ namespace Plugins
                                 double.TryParse(data.current.wind_gust.ToString(), out dGust);
                             }
 
-                            var temp = data.current.temp.ToString() + TempUnit;
+                            temp = data.current.temp.ToString() + TempUnit;
 
-                            
+
                             double.TryParse(data.current.temp.ToString(), out double dTemp);
 
                             if (dGust > ConfigObject.GustLimit)
@@ -279,48 +297,114 @@ namespace Plugins
                                 _statusLimit = false;
 
 
-                            var feelsLike = data.current.feels_like.ToString() + TempUnit;
-                            var humidity = data.current.humidity.ToString() + "%";
-                            var uvi = "";
+                            feelsLike = data.current.feels_like.ToString() + TempUnit;
+                            humidity = data.current.humidity.ToString() + "%";
+                            uvi = "";
                             if (HasKey(data.current, "uvi")) //not always available
-                                uvi = data.current.uvi.ToString();
-
-                            string format = ConfigObject.Format.Replace("\r\n","\n");
-                            if (format.Contains("{icon}"))
-                                Icon = Image.Load(ResourceLoader.GetResourceBytes(icn + ".png"));
-                            else
-                                Icon = null;
-
-                            format = format.Replace("{icon}", "");
-                            format = format.Replace("{main}", main);
-                            format = format.Replace("{description}", description);
-                            format = format.Replace("{wind}", wind);
-                            format = format.Replace("{gust}", gust);
-                            format = format.Replace("{temp}", temp);
-                            format = format.Replace("{feelsLike}", feelsLike);
-                            format = format.Replace("{humidity}", humidity);
-                            format = format.Replace("{uvi}", uvi);
-
-                            _weather = format.Split('\n');
-
-                            _error = "";
-
+                                uvi = data.current.uvi.ToString();                           
                         }
+                        else
+                        {
+                            icn = data.weather[0].icon.ToString();
+                            main = data.weather[0].main.ToString();
+                            description = data.weather[0].description.ToString();
+                            wind = data.wind.speed.ToString() + SpeedUnit;                            
+                            temp = data.main.temp.ToString() + TempUnit;
+
+                            double dGust = -1;
+                            if (HasKey(data, "wind.gust")) //not always available
+                            {
+                                gust = data.wind.gust.ToString() + SpeedUnit;
+                                double.TryParse(data.wind.gust.ToString(), out dGust);
+                            }
+
+                            if (dGust > ConfigObject.GustLimit)
+                            {
+                                if (!_gustLimit)
+                                    Results.Add(new ResultInfo("Gust", wind));
+                                _gustLimit = true;
+                            }
+                            else
+                                _gustLimit = false;
+
+                            wind_deg =Convert.ToInt32(data.wind.deg.ToString());
+                            double.TryParse(data.main.temp.ToString(), out double dTemp);
+
+                            if (dTemp > ConfigObject.TempLimit)
+                            {
+                                if (!_tempLimit)
+                                    Results.Add(new ResultInfo("High Temp", temp));
+                                _tempLimit = true;
+                            }
+                            else
+                            {
+                                _tempLimit = true;
+                            }
+
+                            if (ConfigObject.StatusEvent.ToLowerInvariant() == main.ToLowerInvariant())
+                            {
+                                if (!_statusLimit)
+                                    Results.Add(new ResultInfo("Status", main));
+                                _statusLimit = true;
+                            }
+                            else
+                                _statusLimit = false;
+
+
+                            feelsLike = data.main.feels_like.ToString() + TempUnit;
+                            humidity = data.main.humidity.ToString() + "%";
+                            uvi = "";
+                        }
+
+                        string format = ConfigObject.Format.Replace("\r\n", "\n");
+                        if (format.Contains("{icon}"))
+                            Icon = Image.Load(ResourceLoader.GetResourceBytes(icn + ".png"));
+                        else
+                            Icon = null;
+
+                        format = format.Replace("{icon}", "");
+                        format = format.Replace("{main}", main);
+                        format = format.Replace("{description}", description);
+                        format = format.Replace("{wind}", wind);
+                        format = format.Replace("{windDeg}", wind_deg.ToString());
+                        format = format.Replace("{windDir}", GetDirectionString(wind_deg));
+                        format = format.Replace("{gust}", gust);
+                        format = format.Replace("{temp}", temp);
+                        format = format.Replace("{feelsLike}", feelsLike);
+                        format = format.Replace("{humidity}", humidity);
+                        format = format.Replace("{uvi}", uvi);
+
+
+                        _weather = format.Split('\n');
+
+                        _error = "";
                     }
-                    catch(Exception ex)
-                    {
-                        //service down?
-                        _error = ex.Message;
-                        //_weather = new[] { ex.Message };
-                        //Icon = null;
-                    }
-                    
+                }
+                catch (Exception ex)
+                {
+                    //service down?
+                    _error = ex.Message;
+                    //_weather = new[] { ex.Message };
+                    //Icon = null;
                 }
             }
-           
-            
                 
         }
+
+        public static string GetDirectionString(double degrees)
+        {
+            string[] directions = { "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW" };
+
+            // Convert degrees to a value between 0 and 360
+            degrees %= 360;
+
+            // Determine the index of the direction array to use
+            int index = (int)((degrees / 22.5) + 0.5);
+
+            // Get the direction string for the index
+            return directions[index % 16];
+        }
+
         public Size MeasureText(string[] txtArr, int xPadding, int yPadding, out int[] lineWidths, out int[] lineHeights)
         {
             lineWidths = new int[txtArr.Length];

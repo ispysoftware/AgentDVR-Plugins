@@ -6,12 +6,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>DeveloperInABox</Authors>
     <Description>Video Surveillance Software</Description>
-    <Copyright>2022 DeveloperInABox</Copyright>
+    <Copyright>2023 DeveloperInABox</Copyright>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <FileVersion>1.4.0.0</FileVersion>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
+    <FileVersion>1.5.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
