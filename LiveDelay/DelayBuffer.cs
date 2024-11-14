@@ -11,23 +11,26 @@ namespace Plugins
 {
     internal class DelayBuffer
     {
-        public static int BufferSeconds;
-        public static bool BufferFull;
-        public byte[] Data;
+        public int BufferSeconds;
+        public bool BufferFull;
         public DateTime Created;
-        public static Font DrawFont;
+        private byte[] _data;
         
         public DelayBuffer(byte[] data)
         {
             Created = DateTime.UtcNow;
-            Data = new byte[data.Length];
-            Buffer.BlockCopy(data,0, Data, 0, data.Length);
+            _data = data;
         }
 
-        private static Queue<DelayBuffer> _audioQueue = new Queue<DelayBuffer>();
-        private static Queue<DelayBuffer> _videoQueue = new Queue<DelayBuffer>();
+        public DelayBuffer()
+        {
+            Created = DateTime.UtcNow;
+        }
 
-        public static byte[] GetBuffer(byte[] rawData, int bytesRecorded)
+        private Queue<DelayBuffer> _audioQueue = new Queue<DelayBuffer>();
+        private Queue<DelayBuffer> _videoQueue = new Queue<DelayBuffer>();
+
+        public byte[] GetBuffer(byte[] rawData, int bytesRecorded)
         {
             if (BufferSeconds == 0)
                 return rawData;
@@ -37,18 +40,18 @@ namespace Plugins
                 BufferFull = _audioQueue.Peek().Created < DateTime.UtcNow.AddSeconds(0 - BufferSeconds);
             if (BufferFull)
             {
-                return _audioQueue.Dequeue().Data;
+                return _audioQueue.Dequeue()._data;
             }
             //return live audio until we have a buffer
             return rawData;
         }
 
-        public static void GetBuffer(IntPtr frame, System.Drawing.Size sz, int channels, int stride)
+        public void GetBuffer(IntPtr frame, System.Drawing.Size sz, int channels, int stride, Font font)
         {
             if (BufferSeconds == 0)
                 return;
             byte[] data = new byte[stride * sz.Height];
-            if (frame == null || data.Length <= 0)
+            if (frame == IntPtr.Zero || data.Length <= 0)
                 return;
             Marshal.Copy(frame,data,0,data.Length);
             
@@ -59,7 +62,7 @@ namespace Plugins
 
             if (BufferFull)
             {
-                var d = _videoQueue.Dequeue().Data;
+                var d = _videoQueue.Dequeue()._data;
                 if (stride * sz.Height == d.Length)
                 {
                     Marshal.Copy(d, 0, frame, d.Length);
@@ -72,27 +75,27 @@ namespace Plugins
             //write buffering notice
             unsafe
             {
-                using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
+                using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), stride * sz.Height, sz.Width, sz.Height))
                 {
                     const string txt = "DELAYING...";
-                    FontRectangle size = TextMeasurer.Measure(txt, new TextOptions(DrawFont));
-                    var box = new Rectangle(sz.Width/2 - (int)size.Width/2 - 5, sz.Height/2 - (int)size.Height/2 - 5 , (int)size.Width+ 10, (int) size.Height+10);
+                    FontRectangle size = TextMeasurer.MeasureAdvance(txt, new TextOptions(font));
+                    var box = new Rectangle(sz.Width / 2 - (int)size.Width / 2 - 5, sz.Height / 2 - (int)size.Height / 2 - 5, (int)size.Width + 10, (int)size.Height + 10);
                     image.Mutate(x => x.Fill(Color.Red, box));
-                    image.Mutate(x => x.DrawText(txt, DrawFont, Color.White, new PointF(box.X + 5, box.Y + 5)));
+                    image.Mutate(x => x.DrawText(txt, font, Color.White, new PointF(box.X + 5, box.Y + 5)));
 
                 }
             }
 
         }
 
-        public static void Clear()
+        public void Clear()
         {
             _audioQueue = new Queue<DelayBuffer>();
             _videoQueue = new Queue<DelayBuffer>();
             BufferFull = false;
         }
 
-        public static void Close()
+        public void Close()
         {
             _audioQueue = null;
             _videoQueue = null;

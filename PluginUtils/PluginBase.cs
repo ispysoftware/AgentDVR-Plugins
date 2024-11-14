@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace PluginUtils
 {
@@ -28,6 +27,7 @@ namespace PluginUtils
                 return _configObject;
             }
         }
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(PluginBase))]
         public virtual string GetConfiguration(string languageCode)
         {
             //populate json
@@ -35,6 +35,7 @@ namespace PluginUtils
             return JsonConvert.SerializeObject(d);
         }
 
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(PluginBase))]
         public virtual void SetConfiguration(string json)
         {
             //populate configObject with json values
@@ -53,6 +54,7 @@ namespace PluginUtils
         public string CameraName, MicrophoneName;
         public int CameraID, MicrophoneID, LocalPort, SampleRate, Channels;
 
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(PluginBase))]
         public virtual string GetResultJSON()
         {
             lock (ResultsLock)

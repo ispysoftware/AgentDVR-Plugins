@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using PluginUtils;
@@ -15,10 +14,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
 using Newtonsoft.Json;
-using SixLabors.ImageSharp.Advanced;
-using System.IO;
-using Emgu.TF.Models;
-using Emgu.Models;
 
 namespace Plugins
 {
@@ -32,17 +27,13 @@ namespace Plugins
         public Main() : base()
         {
             //get cross platform font family           
-            FontFamily fam = null;
+            FontFamily fam = SystemFonts.Collection.Families.First();
             foreach (var fontfam in fontfams)
             {
-                if (SystemFonts.TryFind(fontfam, out fam))
+                if (SystemFonts.Collection.TryGet(fontfam, out fam))
                     break;
             }
-            if (fam == null)
-            {
-                fam = SystemFonts.Collection.Families.First();
-            }
-
+            
             _drawFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
         }
 
@@ -198,7 +189,7 @@ namespace Plugins
                         var targetSize = _processor.SizeRequired == Size.Empty ? new Size(_area.Width,_area.Height) : _processor.SizeRequired;
                         unsafe
                         {
-                            using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
+                            using (var image = Image.WrapMemory<Bgr24>((void*) frame, stride, sz.Width, sz.Height))
                             {
                                 using (Image<Bgr24> copy = image.Clone(x => x.Resize(targetSize.Width, targetSize.Height, KnownResamplers.Bicubic, _area, new Rectangle(0, 0, targetSize.Width, targetSize.Height), true)))
                                 {
@@ -229,7 +220,7 @@ namespace Plugins
                     return;
                 unsafe
                 {
-                    using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
+                    using (var image = Image.WrapMemory<Bgr24>((void*)frame, stride, sz.Width, sz.Height))
                     {
                         foreach (var l in lres)
                         {

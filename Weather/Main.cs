@@ -10,14 +10,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net;
-using System.Xml.Linq;
-using SixLabors.ImageSharp.Processing.Processors.Transforms;
+using System.Net.Http;
 
 namespace Plugins
 {
     public class Main : PluginBase, ICamera
     {
-        private Font _drawFont;
+        private Font _messageFont;
         private bool _needUpdate = true;
 
         private string[] _weather = new[] {"Unavailable"};
@@ -47,7 +46,7 @@ namespace Plugins
             if (!ff)
                 fam = SystemFonts.Collection.Families.First();
 
-            _drawFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
+            _messageFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
         }
 
         public string Supports
@@ -133,7 +132,7 @@ namespace Plugins
                 if (_lastWeatherUpdate < DateTime.UtcNow.AddSeconds(0-ConfigObject.UpdateFrequency))
                 {
                     _lastWeatherUpdate = DateTime.UtcNow;
-                    _=Task.Run(() => UpdateWeather());
+                    _ = UpdateWeather();
                 }
                 var w = _weather.ToList();
                 if (!string.IsNullOrEmpty(_error))
@@ -202,7 +201,9 @@ namespace Plugins
                 return false;
             }
         }
-        private void UpdateWeather()
+        static readonly HttpClient client = new HttpClient();
+
+        private async Task UpdateWeather()
         {
             string url = "";
             if (!string.IsNullOrEmpty(ConfigObject.URL))
@@ -227,7 +228,7 @@ namespace Plugins
             {
                 try
                 {
-                    var c = new WebClient().DownloadString(url);
+                    var c = await client.GetStringAsync(url);
                     dynamic data = JsonConvert.DeserializeObject(c);
 
                     if (HasKey(data, "message"))
@@ -413,7 +414,7 @@ namespace Plugins
 
             for (int i = 0; i < txtArr.Length; i++)
             {
-                FontRectangle size = TextMeasurer.Measure(txtArr[i], new TextOptions(_drawFont));
+                FontRectangle size = TextMeasurer.MeasureAdvance(txtArr[i], new TextOptions(_messageFont));
                 lineWidths[i] = (int)size.Width + xPadding;
                 lineHeights[i] = (int)size.Height + yPadding;
                 w = Math.Max(lineWidths[i], w);
@@ -426,7 +427,7 @@ namespace Plugins
         {
             if (_needUpdate)
             {
-                _drawFont = SystemFonts.CreateFont(_drawFont.Name, ConfigObject.FontSize, FontStyle.Regular);
+                _messageFont = SystemFonts.CreateFont(_messageFont.Name, ConfigObject.FontSize, FontStyle.Regular);
                 if (!string.IsNullOrEmpty(ConfigObject.Background))
                 {
                     if (!Color.TryParse(ConfigObject.Background, out _backGround))
@@ -450,7 +451,7 @@ namespace Plugins
             }
             unsafe
             {
-                using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), imageSize.Width, imageSize.Height))
+                using (var image = Image.WrapMemory<Bgr24>((void*) frame, stride, imageSize.Width, imageSize.Height))
                 {
                     string[] weather = Weather;
                     var icn = Icon;
@@ -466,7 +467,7 @@ namespace Plugins
                     var y = box.Y+3;
                     for (var i = 0; i < lw.Length; i++)
                     {
-                        image.Mutate(x => x.DrawText(weather[i], _drawFont, _foreGround, new PointF(box.X + (icn?.Width ?? 3), y)));
+                        image.Mutate(x => x.DrawText(weather[i], _messageFont, _foreGround, new PointF(box.X + (icn?.Width ?? 3), y)));
                         y += lh[i];
                     }
                     if (icn!= null)

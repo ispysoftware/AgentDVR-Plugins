@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Xml.Linq;
 
 namespace PluginUtils
 {
@@ -130,6 +133,25 @@ namespace PluginUtils
             return d;
         }
 
+        public static void PopulateObject(dynamic d, object o)
+        {
+            foreach (var sec in d.sections)
+            {
+                foreach (var item in sec.items)
+                {
+                    var bt = item["bindto"];
+                    if (bt != null)
+                    {
+                        var val = item["value"];
+                        if (val != null)
+                        {
+                            Populate(item, o);
+                        }
+                    }
+                }
+            }
+        }
+
         private static string NV(string source, string name)
         {
             if (string.IsNullOrEmpty(source))
@@ -166,24 +188,6 @@ namespace PluginUtils
             return currentObject;
         }
 
-        public static void PopulateObject(dynamic d, object o)
-        {
-            foreach (var sec in d.sections)
-            {
-                foreach (var item in sec.items)
-                {
-                    var bt = item["bindto"];
-                    if (bt != null)
-                    {
-                        var val = item["value"];
-                        if (val != null)
-                        {
-                            Populate(item, o);
-                        }
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Scales a rectangle of percentages to frame coordinates
@@ -200,6 +204,7 @@ namespace PluginUtils
                                         Convert.ToInt32(R.Y * hmulti), Convert.ToInt32(R.Width * wmulti),
                                         Convert.ToInt32(R.Height * hmulti));
         }
+
 
         static void Populate(dynamic item, object o)
         {
@@ -241,7 +246,7 @@ namespace PluginUtils
 
                             if (hex.Length != 6) throw new Exception("Color not valid");
 
-                            val = int.Parse(hex.Substring(0, 2), NumberStyles.HexNumber)+","+
+                            val = int.Parse(hex.Substring(0, 2), NumberStyles.HexNumber) + "," +
                                 int.Parse(hex.Substring(2, 2), NumberStyles.HexNumber) + "," +
                                 int.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
@@ -293,15 +298,9 @@ namespace PluginUtils
                 }
             }
         }
-        private struct Points
-        {
-            public float x, y, x2, y2;
-        }
 
-        private struct Areas
-        {
-            public float x, y, w, h;
-        }
+        
+
         public static List<Line2D> ParseTripWires(Size frameSize, string json)
         {
             var tripWireList = new List<Line2D>();
@@ -330,6 +329,7 @@ namespace PluginUtils
             return areaList;
         }
 
+  
         internal static Point ScalePercentToFrame(Point p, Size sz)
         {
             var x = (p.X / 100d) * sz.Width;

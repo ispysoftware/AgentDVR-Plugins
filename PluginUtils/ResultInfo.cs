@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PluginUtils
 {
-    public struct ResultInfo
+    public partial class ResultInfo
     {
         public string EventName;
         public string MSG;

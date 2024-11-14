@@ -9,6 +9,8 @@
     <Import_RootNamespace>PluginUtils</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Points.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Areas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IPlugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ICamera.cs" />

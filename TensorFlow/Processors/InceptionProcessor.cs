@@ -32,7 +32,7 @@ namespace Plugins.Processors
 
 
             model = new Inception(null, SessionOptions);
-            model.OnDownloadProgressChanged += _inceptionGraph_OnDownloadProgressChanged; ;
+            model.OnDownloadProgressChanged += Model_OnDownloadProgressChanged;
             
             //use a retrained model to recognize flowers
            
@@ -68,6 +68,11 @@ namespace Plugins.Processors
             ProcessorReady?.Invoke(this, EventArgs.Empty);
         }
 
+        private void Model_OnDownloadProgressChanged(long? totalBytesToReceive, long bytesReceived, double? progressPercentage)
+        {
+
+        }
+
         public Session Session => model?.Session;
 
         public void Close()
@@ -78,10 +83,6 @@ namespace Plugins.Processors
                 CloseWhenReady = true;
         }
 
-        private void _inceptionGraph_OnDownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
-        {
-            
-        }
 
         public void Recognise(Tensor t)
         {

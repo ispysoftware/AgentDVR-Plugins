@@ -15,7 +15,7 @@ namespace Plugins
         private DateTime _lastAlert = DateTime.UtcNow;
         private Font _drawFont;
         private bool _needUpdate = false;
-        private IPen _wirepen, _trippedpen;
+        private Pen _wirepen, _trippedpen;
         private List<Line2D> _tripwires = new List<Line2D>();
 
         public Main():base()
@@ -137,7 +137,7 @@ namespace Plugins
                 //Use SixLabors drawing for cross platform support.
                 unsafe
                 {
-                    using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), sz.Width, sz.Height))
+                    using (var image = Image.WrapMemory<Bgr24>((void*)frame, stride, sz.Width, sz.Height))
                     {
                         var box = new Rectangle(recLoc, new Size(recSize, recSize));
                         image.Mutate(x => x.Fill(Color.Red, box));
@@ -163,7 +163,7 @@ namespace Plugins
                                     }
                                 }
 
-                                image.Mutate(x => x.DrawLines(pen, points));
+                                image.Mutate(x => x.DrawLine(pen, points));
 
                             }
                         }

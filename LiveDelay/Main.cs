@@ -8,6 +8,9 @@ namespace Plugins
 {
     public class Main : PluginBase, ICamera, IMicrophone
     {
+        private DelayBuffer _delayBuffer;
+        private Font _messageFont;
+
         public Main():base()
         {
             
@@ -26,8 +29,8 @@ namespace Plugins
             if (!ff)
                 fam = SystemFonts.Collection.Families.First();
 
-            DelayBuffer.DrawFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
-
+            _messageFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
+            _delayBuffer = new DelayBuffer();
         }
 
         public string Supports
@@ -46,8 +49,8 @@ namespace Plugins
         public override void SetConfiguration(string json)
         {
             base.SetConfiguration(json);
-            DelayBuffer.Clear();
-            DelayBuffer.BufferSeconds = ConfigObject.Delay;
+            _delayBuffer.Clear();
+            _delayBuffer.BufferSeconds = ConfigObject.Delay;
             
         }
 
@@ -58,17 +61,17 @@ namespace Plugins
         
         public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
         {
-            return DelayBuffer.GetBuffer(rawData, bytesRecorded);
+            return _delayBuffer.GetBuffer(rawData, bytesRecorded);
         }
 
         public void ProcessVideoFrame(IntPtr frame, System.Drawing.Size sz, int channels, int stride)
         {
-            DelayBuffer.GetBuffer(frame, sz, channels, stride);
+            _delayBuffer.GetBuffer(frame, sz, channels, stride, _messageFont);
         }
 
         ~Main()
         {
-            DelayBuffer.Close();
+            _delayBuffer?.Close();
             Dispose(false);
         }
     }

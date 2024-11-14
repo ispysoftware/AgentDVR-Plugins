@@ -1,9 +1,9 @@
 ﻿{
-    "header": "Live Delay",
-    "okResult": "UploadJSON",
-    "name": "EditPluginConfiguration",
-    "origin": "Plugin",
-    "version": "VERSION",
+  "header": "Live Delay",
+  "okResult": "UploadJSON",
+  "name": "EditPluginConfiguration",
+  "origin": "Plugin",
+  "version": "VERSION",
   "sections": [
     {
       "header": "General",
