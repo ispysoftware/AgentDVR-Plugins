@@ -36,7 +36,7 @@
   </Target>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" DependsOnTargets="PostBuildMacros">
-    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\LiveDelay\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\LiveDelay\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\LiveDelay_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
+    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\LiveDelay\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\LiveDelay\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\LiveDelay_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
   </Target>
   
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />

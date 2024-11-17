@@ -137,7 +137,7 @@ namespace Plugins
                 //Use SixLabors drawing for cross platform support.
                 unsafe
                 {
-                    using (var image = Image.WrapMemory<Bgr24>((void*)frame, stride, sz.Width, sz.Height))
+                    using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), stride * sz.Height, sz.Width, sz.Height))
                     {
                         var box = new Rectangle(recLoc, new Size(recSize, recSize));
                         image.Mutate(x => x.Fill(Color.Red, box));

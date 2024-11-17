@@ -8,8 +8,8 @@
     <Copyright>2024 DeveloperInABox</Copyright>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <FileVersion>1.2.0.0</FileVersion>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="json\config_en.json" />
@@ -20,13 +20,9 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="ZXing.Net" Version="0.16.9" />
   </ItemGroup>
+ 
   <ItemGroup>
     <EmbeddedResource Include="json\config_en.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="config.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -46,7 +42,7 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" DependsOnTargets="PostBuildMacros">
-    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Barcode\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentService\Plugins\Barcode\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Barcode_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
+    <Exec Command="&#xD;&#xA;if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Barcode\&quot; (&#xD;&#xA;  del /Q &quot;$(TargetDir)Newtonsoft.Json.dll&quot;&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\Barcode\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Barcode_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
   </Target>
   
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />

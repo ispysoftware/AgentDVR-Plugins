@@ -189,7 +189,7 @@ namespace Plugins
                         var targetSize = _processor.SizeRequired == Size.Empty ? new Size(_area.Width,_area.Height) : _processor.SizeRequired;
                         unsafe
                         {
-                            using (var image = Image.WrapMemory<Bgr24>((void*) frame, stride, sz.Width, sz.Height))
+                            using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), stride * sz.Height, sz.Width, sz.Height))
                             {
                                 using (Image<Bgr24> copy = image.Clone(x => x.Resize(targetSize.Width, targetSize.Height, KnownResamplers.Bicubic, _area, new Rectangle(0, 0, targetSize.Width, targetSize.Height), true)))
                                 {
@@ -220,7 +220,7 @@ namespace Plugins
                     return;
                 unsafe
                 {
-                    using (var image = Image.WrapMemory<Bgr24>((void*)frame, stride, sz.Width, sz.Height))
+                    using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), stride * sz.Height, sz.Width, sz.Height))
                     {
                         foreach (var l in lres)
                         {

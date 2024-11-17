@@ -229,7 +229,7 @@
         {
           "text": "Area",
           "value": "",
-          "type": "ScreenAreaManager",
+          "type": "DesktopAreaManager",
           "width": 320,
           "height": 240,
           "help": "Draw a rectangular area. Drag out to remove",
