@@ -451,7 +451,7 @@ namespace Plugins
             }
             unsafe
             {
-                using (var image = Image.WrapMemory<Bgr24>((void*) frame, stride, imageSize.Width, imageSize.Height))
+                using (var image = Image.WrapMemory<Bgr24>(frame.ToPointer(), stride * imageSize.Height, imageSize.Width, imageSize.Height))
                 {
                     string[] weather = Weather;
                     var icn = Icon;
