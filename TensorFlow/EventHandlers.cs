@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -32,7 +31,7 @@ namespace Plugins
             {
                 var sb = new StringBuilder("{\"results\":[");
                 foreach (var result in Results)
-                    sb.Append($"{{\"label\":{JsonConvert.ToString(result.Label)},\"probability\":{result.Probability}}}, \"region\":{{\"x\":{result.Region.X.ToString(CultureInfo.InvariantCulture)},\"y\":{result.Region.Y.ToString(CultureInfo.InvariantCulture)},\"w\":{result.Region.Width.ToString(CultureInfo.InvariantCulture)},\"h\":{result.Region.Height.ToString(CultureInfo.InvariantCulture)}}}}},");
+                    sb.Append($"{{\"label\":\"{result.Label}\",\"probability\":{result.Probability}}}, \"region\":{{\"x\":{result.Region.X.ToString(CultureInfo.InvariantCulture)},\"y\":{result.Region.Y.ToString(CultureInfo.InvariantCulture)},\"w\":{result.Region.Width.ToString(CultureInfo.InvariantCulture)},\"h\":{result.Region.Height.ToString(CultureInfo.InvariantCulture)}}}}},");
                 return sb.ToString().Trim(',')+"]}";
             }
         }

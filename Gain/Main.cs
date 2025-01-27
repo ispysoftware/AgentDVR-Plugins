@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NAudio.Dsp;
-using Newtonsoft.Json;
 using PluginUtils;
 
 namespace Plugins

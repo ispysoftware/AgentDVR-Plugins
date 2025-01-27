@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NAudio.Dsp;
-using Newtonsoft.Json;
 using PluginUtils;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NAudio.Wave;
 using System.Globalization;
+using System.Text.Json.Nodes;
 
 namespace Plugins
 {
@@ -83,7 +82,7 @@ namespace Plugins
             var js = "[";
             foreach (var c in Classes)
             {
-                js += "{\"original\":" + JsonConvert.ToString(c.name) + ",\"translated\":" + JsonConvert.ToString(c.name) + "},";
+                js += "{\"original\":\"" + c.name + "\",\"translated\":\"" + c.name + "\"},";
             }
             js = js.Trim(',') + "]";
             return js;
@@ -96,9 +95,9 @@ namespace Plugins
             json = json.Replace("\"YAMOBJECTS\"", ClassesJSON());
             json = json.Replace("OBJECTS_SELECTED", ConfigObject.listenfor);
 
-            dynamic d = Utils.PopulateResponse(json, ConfigObject);
-            return JsonConvert.SerializeObject(d);
-        
+            JsonNode? d = Utils.PopulateResponse(json, ConfigObject);
+            return d?.ToJsonString() ?? string.Empty;
+
         }
 
         public byte[] ProcessAudioFrame(byte[] rawData, int bytesRecorded, int samplerate, int channels)
@@ -165,7 +164,7 @@ namespace Plugins
                 var r = results.First().AsTensor<float>();
                 int prediction = MaxProbability(r, out var max);
                 var c = Classes.First(p => p.id == prediction).name;
-                var aijson = "{\"sound\":" + JsonConvert.ToString(c) + ",\"probability\": " + max.ToString(CultureInfo.InvariantCulture) + "}";
+                var aijson = "{\"sound\":\"" + c + "\",\"probability\": " + max.ToString(CultureInfo.InvariantCulture) + "}";
 
                 Results.Add(new ResultInfo("Sound Detected", c, c, aijson));
                 if (max * 100 >= ConfigObject.confidence)
