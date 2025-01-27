@@ -13,7 +13,8 @@ using Plugins.Processors;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
-using Newtonsoft.Json;
+using System.Dynamic;
+using System.Text.Json;
 
 namespace Plugins
 {
@@ -156,7 +157,11 @@ namespace Plugins
             var _area = Rectangle.Empty;
             if (!string.IsNullOrEmpty(ConfigObject.Area))
             {
-                dynamic zone = JsonConvert.DeserializeObject(ConfigObject.Area);
+                dynamic zone = JsonSerializer.Deserialize<ExpandoObject>(ConfigObject.Area, new JsonSerializerOptions
+                {
+                    // Allows case-insensitive matching of property names
+                    PropertyNameCaseInsensitive = true
+                });
                 var d = zone[0];
                 var x = Convert.ToInt32(d["x"].Value);
                 var y = Convert.ToInt32(d["y"].Value);

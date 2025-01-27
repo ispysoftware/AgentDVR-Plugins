@@ -8,9 +8,9 @@ using PluginUtils;
 using SixLabors.Fonts;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Net;
 using System.Net.Http;
+using System.Dynamic;
+using System.Text.Json;
 
 namespace Plugins
 {
@@ -190,11 +190,34 @@ namespace Plugins
                 }
             }
         }
-        private bool HasKey(dynamic d, string key)
+        private bool HasKey(dynamic obj, string path)
         {
             try
             {
-                return d[key] != null;
+                if (obj == null) return false;
+
+                // Split on '.' to handle nested paths
+                var segments = path.Split('.');
+                object current = obj;
+
+                foreach (string segment in segments)
+                {
+                    // Convert current to IDictionary<string, object>, which is what an ExpandoObject is under the hood
+                    if (current is IDictionary<string, object> dict)
+                    {
+                        if (!dict.TryGetValue(segment, out object next))
+                            return false;
+
+                        current = next; // go deeper
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                // If we've reached here, we've found all segments
+                return current != null;
             }
             catch
             {
@@ -229,7 +252,11 @@ namespace Plugins
                 try
                 {
                     var c = await client.GetStringAsync(url);
-                    dynamic data = JsonConvert.DeserializeObject(c);
+                    dynamic data = JsonSerializer.Deserialize<ExpandoObject>(c, new JsonSerializerOptions
+                    {
+                        // Allows case-insensitive matching of property names
+                        PropertyNameCaseInsensitive = true
+                    });
 
                     if (HasKey(data, "message"))
                     {

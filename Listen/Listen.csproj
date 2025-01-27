@@ -19,7 +19,6 @@
     <PackageReference Include="Microsoft.ML" Version="4.0.0-preview.24522.7" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.20.0" />
     <PackageReference Include="NAudio.Core" Version="2.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>

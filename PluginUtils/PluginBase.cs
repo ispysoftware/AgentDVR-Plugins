@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace PluginUtils
 {
@@ -30,9 +31,12 @@ namespace PluginUtils
         [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(PluginBase))]
         public virtual string GetConfiguration(string languageCode)
         {
-            //populate json
-            dynamic d = Utils.PopulateResponse(ResourceLoader.LoadJson(languageCode), ConfigObject);
-            return JsonConvert.SerializeObject(d);
+            // Load the raw JSON from somewhere
+            string rawJson = ResourceLoader.LoadJson(languageCode);
+
+            // Call your new PopulateResponse method that returns a JsonNode
+            JsonNode? d = Utils.PopulateResponse(rawJson, ConfigObject);
+            return d?.ToJsonString() ?? string.Empty;
         }
 
         [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(PluginBase))]
@@ -41,12 +45,14 @@ namespace PluginUtils
             //populate configObject with json values
             try
             {
-                dynamic d = JsonConvert.DeserializeObject(json);
-                Utils.PopulateObject(d, ConfigObject);
+                // 1. Parse the incoming JSON into a JsonNode
+                JsonNode? node = JsonNode.Parse(json);
+                Utils.PopulateObject(node, ConfigObject);
             }
             catch (Exception ex)
             {
                 Utils.LastException = ex;
+                Console.WriteLine(ex.Message+" "+ex.StackTrace);
             }
 
         }
@@ -59,7 +65,7 @@ namespace PluginUtils
         {
             lock (ResultsLock)
             {
-                var json = JsonConvert.SerializeObject(Results);
+                string json = JsonSerializer.Serialize(Results);
                 Results.Clear();
                 return json;
             }

@@ -223,22 +223,6 @@
       ]
     },
     {
-      "header": "Rectangular Area",
-      "displayType": "Form",
-      "items": [
-        {
-          "text": "Area",
-          "value": "",
-          "type": "DesktopAreaManager",
-          "width": 320,
-          "height": 240,
-          "help": "Draw a rectangular area. Drag out to remove",
-          "bindto": "Area",
-          "max": 3
-        }
-      ]
-    },
-    {
       "header": "Freeform Area",
       "displayType": "Form",
       "items": [
