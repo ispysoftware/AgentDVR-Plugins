@@ -239,12 +239,12 @@ namespace PluginUtils
 
         public static void PopulateObject(JsonNode? jsonNode, object o)
         {
-            Console.WriteLine(jsonNode);
+            //Console.WriteLine(jsonNode);
             if (jsonNode == null) return;
 
             // "sections" is expected to be a JSON array
             JsonArray? sections = jsonNode["sections"] as JsonArray;
-            Console.WriteLine(sections);
+            //Console.WriteLine(sections);
             if (sections == null) return;
 
             foreach (JsonNode? sec in sections)
@@ -273,7 +273,7 @@ namespace PluginUtils
                     if (val == null)
                         continue;
 
-                    Console.WriteLine("populate");
+                    //Console.WriteLine("populate");
                     Populate(item, o);
                 }
             }
@@ -380,7 +380,7 @@ namespace PluginUtils
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message + ": " + ex.StackTrace);
+                            //Console.WriteLine(ex.Message + ": " + ex.StackTrace);
                             LastException = ex;
                         }
                         break;
@@ -403,7 +403,7 @@ namespace PluginUtils
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message+": "+ex.StackTrace);
+                        //Console.WriteLine(ex.Message+": "+ex.StackTrace);
                         LastException = ex;
                     }
                     i++;
@@ -423,7 +423,7 @@ namespace PluginUtils
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message + ": " + ex.StackTrace);
+                    //Console.WriteLine(ex.Message + ": " + ex.StackTrace);
                     LastException = ex;
                 }
             }
@@ -564,7 +564,7 @@ namespace PluginUtils
         {
             // Extract the actual primitive value
             object actualValue = ExtractPrimitiveValue(propValue);
-            Console.WriteLine($"{propName} = {actualValue}");
+            //Console.WriteLine($"{propName} = {actualValue}");
 
             // Navigate to the target property
             object currentObject = src;

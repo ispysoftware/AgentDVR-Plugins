@@ -52,7 +52,7 @@ namespace PluginUtils
             catch (Exception ex)
             {
                 Utils.LastException = ex;
-                Console.WriteLine(ex.Message+" "+ex.StackTrace);
+                //Console.WriteLine(ex.Message+" "+ex.StackTrace);
             }
 
         }
