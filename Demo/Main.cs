@@ -7,6 +7,8 @@ using SixLabors.ImageSharp.PixelFormats;
 using PluginUtils;
 using SixLabors.Fonts;
 using System.Linq;
+using Emgu.CV;
+using Emgu.CV.CvEnum;
 
 namespace Plugins
 {
@@ -98,6 +100,23 @@ namespace Plugins
 
         public void ProcessVideoFrame(IntPtr frame, System.Drawing.Size sz, int channels, int stride)
         {
+            // Create the source Mat from the frame
+            using (var srcMat = new Mat(sz, DepthType.Cv8U, 3, frame, stride))
+            {
+                // Create a new Mat to hold the grayscale image
+                using (var grayMat = new Mat())
+                {
+                    // Convert from BGR to Gray, storing the result in grayMat
+                    CvInvoke.CvtColor(srcMat, grayMat, ColorConversion.Bgr2Gray);
+
+                    // Apply threshold to the grayscale image
+                    CvInvoke.Threshold(grayMat, grayMat, 128, 255, ThresholdType.Binary);
+
+                    // If you need the image back in 3 channels (for drawing, etc.), convert it back:
+                    CvInvoke.CvtColor(grayMat, srcMat, ColorConversion.Gray2Bgr);
+                }
+            }
+
             if (_needUpdate)
             {
                 _tripwires = Utils.ParseTripWires(sz, ConfigObject.Example_Trip_Wires);

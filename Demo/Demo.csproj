@@ -22,8 +22,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Emgu.CV.Platform.NetStandard">
+      <HintPath>F:\Projects\emgucv\libs\Build\Emgu.CV.Platform.NetStandard\AnyCPU\Release\Emgu.CV.Platform.NetStandard.dll</HintPath>
+    </Reference>
   </ItemGroup>
   
   <Target Name="PostBuildMacros">

@@ -28,8 +28,8 @@
 	<PackageReference Include="Emgu.TF.Protobuf" Version="2.16.1.1620" />
 	<PackageReference Include="Emgu.TF.runtime.windows" Version="2.16.1.1620" />
 	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-	<PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
-	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
+	<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
     <PackageReference Include="Emgu.TF" Version="2.16.1.1620" />
     <PackageReference Include="Emgu.TF.Models" Version="2.16.1.1620" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
