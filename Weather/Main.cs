@@ -24,6 +24,7 @@ namespace Plugins
         private Color _foreGround = Color.White, _backGround = Color.Black;
         private bool _gustLimit, _tempLimit, _statusLimit;
         private string _error = "";
+        private string _famName = "";
 
 
         public Main():base()
@@ -46,7 +47,8 @@ namespace Plugins
             if (!ff)
                 fam = SystemFonts.Collection.Families.First();
 
-            _messageFont = SystemFonts.CreateFont(fam.Name, 20, FontStyle.Regular);
+            _famName = fam.Name;
+            _messageFont = SystemFonts.CreateFont(_famName, 20, FontStyle.Regular);
         }
 
         public string Supports
@@ -454,7 +456,7 @@ namespace Plugins
         {
             if (_needUpdate)
             {
-                _messageFont = SystemFonts.CreateFont(_messageFont.Name, ConfigObject.FontSize, FontStyle.Regular);
+                _messageFont = SystemFonts.CreateFont(_famName, ConfigObject.FontSize, FontStyle.Regular);
                 if (!string.IsNullOrEmpty(ConfigObject.Background))
                 {
                     if (!Color.TryParse(ConfigObject.Background, out _backGround))

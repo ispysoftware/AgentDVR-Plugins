@@ -5,10 +5,10 @@
     <TargetFramework>net9.0</TargetFramework>
     <Authors>DeveloperInABox</Authors>
     <Description>Video Surveillance Software</Description>
-    <Copyright>2024 DeveloperInABox</Copyright>
+    <Copyright>2025 DeveloperInABox</Copyright>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <FileVersion>1.2.1.0</FileVersion>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
@@ -41,7 +41,7 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" DependsOnTargets="PostBuildMacros">
-    <Exec Command="&#xD;&#xA;if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Barcode\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\Barcode\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Barcode_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
+    <Exec Command="&#xD;&#xA;if EXIST &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\Barcode\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\Barcode\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Barcode_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
   </Target>
   
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />

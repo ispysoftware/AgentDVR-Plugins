@@ -9,8 +9,8 @@
     <Copyright>2025 DeveloperInABox</Copyright>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>1.3.1.0</AssemblyVersion>
-    <FileVersion>1.3.1.0</FileVersion>
+    <AssemblyVersion>1.3.2.0</AssemblyVersion>
+    <FileVersion>1.3.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,7 +42,7 @@
   </Target>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" DependsOnTargets="PostBuildMacros">
-    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\Demo\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\Demo\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Demo_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
+    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\Demo\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\Demo\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\Demo_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
   </Target>
   
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />

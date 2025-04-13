@@ -7,7 +7,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Authors>DeveloperInABox</Authors>
 		<Description>Video Surveillance Software</Description>
-		<Copyright>2024 DeveloperInABox</Copyright>
+		<Copyright>2025 DeveloperInABox</Copyright>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -38,7 +38,7 @@
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentService\Plugins\TensorFlow\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\TensorFlow\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\TensorFlow_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
+    <Exec Command="if EXIST &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\TensorFlow\&quot; (&#xD;&#xA;  xcopy &quot;$(TargetDir)*.*&quot; &quot;D:\Projects\agent-service\AgentWindowsCore\Plugins\TensorFlow\&quot; /F /R /Y /I&#xD;&#xA;  if &quot;$(ConfigurationName)&quot;==&quot;Release&quot; (&#xD;&#xA;  powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath 'D:\Projects\agent-service\Builds\Plugins\TensorFlow_@(VersionNumber).zip' -Force&#xD;&#xA;  )&#xD;&#xA;)" />
   </Target>
 
 </Project>
