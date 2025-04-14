@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PluginUtils;
+using SixLabors.Fonts;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-using PluginUtils;
-using SixLabors.Fonts;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net.Http;
+using SixLabors.ImageSharp.Processing;
+using System;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Plugins
 {
@@ -248,177 +248,206 @@ namespace Plugins
                     }
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(url))
             {
                 try
                 {
                     var c = await client.GetStringAsync(url);
-                    dynamic data = JsonSerializer.Deserialize<ExpandoObject>(c, new JsonSerializerOptions
-                    {
-                        // Allows case-insensitive matching of property names
-                        PropertyNameCaseInsensitive = true
-                    });
 
-                    if (HasKey(data, "message"))
+                    // First try to deserialize as WeatherResponse (OneCall API structure)
+                    try
                     {
-                        //error
-                        _weather = new string[] { "error: " + data["message"].ToString() };
-                        Icon = null;
-                    }
-                    else
-                    {
-                        string icn = "";
-                        string main = "unknown";
-                        string description = "unknown";
-                        string gust = "";
-                        string wind = "unknown";
-                        string temp ="", feelsLike="", humidity="", uvi="";
-                        int wind_deg = 0;
-
-                        if (HasKey(data, "current"))
+                        var data = JsonSerializer.Deserialize<WeatherResponse>(c, new JsonSerializerOptions
                         {
-                            icn = data.current.weather[0].icon.ToString();
-                            main = data.current.weather[0].main.ToString();
-                            description = data.current.weather[0].description.ToString();
+                            PropertyNameCaseInsensitive = true
+                        });
 
-                            wind = data.current.wind_speed.ToString() + SpeedUnit;
-                            wind_deg = Convert.ToInt32(data.current.wind_deg.ToString());
-                            double dGust = -1;
-                            if (HasKey(data, "current.wind_gust")) //not always available
-                            {
-                                gust = data.current.wind_gust.ToString() + SpeedUnit;
-                                double.TryParse(data.current.wind_gust.ToString(), out dGust);
-                            }
-
-                            temp = data.current.temp.ToString() + TempUnit;
-
-
-                            double.TryParse(data.current.temp.ToString(), out double dTemp);
-
-                            if (dGust > ConfigObject.GustLimit)
-                            {
-                                if (!_gustLimit)
-                                    Results.Add(new ResultInfo("Gust", wind));
-                                _gustLimit = true;
-                            }
-                            else
-                                _gustLimit = false;
-
-
-                            if (dTemp > ConfigObject.TempLimit)
-                            {
-                                if (!_tempLimit)
-                                    Results.Add(new ResultInfo("High Temp", temp));
-                                _tempLimit = true;
-                            }
-                            else
-                            {
-                                _tempLimit = true;
-                            }
-
-                            if (ConfigObject.StatusEvent.ToLowerInvariant() == main.ToLowerInvariant())
-                            {
-                                if (!_statusLimit)
-                                    Results.Add(new ResultInfo("Status", main));
-                                _statusLimit = true;
-                            }
-                            else
-                                _statusLimit = false;
-
-
-                            feelsLike = data.current.feels_like.ToString() + TempUnit;
-                            humidity = data.current.humidity.ToString() + "%";
-                            uvi = "";
-                            if (HasKey(data.current, "uvi")) //not always available
-                                uvi = data.current.uvi.ToString();                           
-                        }
-                        else
+                        if (data == null)
                         {
-                            icn = data.weather[0].icon.ToString();
-                            main = data.weather[0].main.ToString();
-                            description = data.weather[0].description.ToString();
-                            wind = data.wind.speed.ToString() + SpeedUnit;                            
-                            temp = data.main.temp.ToString() + TempUnit;
-
-                            double dGust = -1;
-                            if (HasKey(data, "wind.gust")) //not always available
-                            {
-                                gust = data.wind.gust.ToString() + SpeedUnit;
-                                double.TryParse(data.wind.gust.ToString(), out dGust);
-                            }
-
-                            if (dGust > ConfigObject.GustLimit)
-                            {
-                                if (!_gustLimit)
-                                    Results.Add(new ResultInfo("Gust", wind));
-                                _gustLimit = true;
-                            }
-                            else
-                                _gustLimit = false;
-
-                            wind_deg =Convert.ToInt32(data.wind.deg.ToString());
-                            double.TryParse(data.main.temp.ToString(), out double dTemp);
-
-                            if (dTemp > ConfigObject.TempLimit)
-                            {
-                                if (!_tempLimit)
-                                    Results.Add(new ResultInfo("High Temp", temp));
-                                _tempLimit = true;
-                            }
-                            else
-                            {
-                                _tempLimit = true;
-                            }
-
-                            if (ConfigObject.StatusEvent.ToLowerInvariant() == main.ToLowerInvariant())
-                            {
-                                if (!_statusLimit)
-                                    Results.Add(new ResultInfo("Status", main));
-                                _statusLimit = true;
-                            }
-                            else
-                                _statusLimit = false;
-
-
-                            feelsLike = data.main.feels_like.ToString() + TempUnit;
-                            humidity = data.main.humidity.ToString() + "%";
-                            uvi = "";
-                        }
-
-                        string format = ConfigObject.Format.Replace("\r\n", "\n");
-                        if (format.Contains("{icon}"))
-                            Icon = Image.Load(ResourceLoader.GetResourceBytes(icn + ".png"));
-                        else
+                            _weather = new string[] { "error: Failed to deserialize response" };
                             Icon = null;
+                            return;
+                        }
 
-                        format = format.Replace("{icon}", "");
-                        format = format.Replace("{main}", main);
-                        format = format.Replace("{description}", description);
-                        format = format.Replace("{wind}", wind);
-                        format = format.Replace("{windDeg}", wind_deg.ToString());
-                        format = format.Replace("{windDir}", GetDirectionString(wind_deg));
-                        format = format.Replace("{gust}", gust);
-                        format = format.Replace("{temp}", temp);
-                        format = format.Replace("{feelsLike}", feelsLike);
-                        format = format.Replace("{humidity}", humidity);
-                        format = format.Replace("{uvi}", uvi);
+                        // Check for error message
+                        if (!string.IsNullOrEmpty(data.message))
+                        {
+                            _weather = new string[] { "error: " + data.message };
+                            Icon = null;
+                            return;
+                        }
 
+                        ProcessOneCallApiResponse(data);
+                    }
+                    catch
+                    {
+                        // If the first deserialization fails, try with the standard API structure
+                        try
+                        {
+                            var data = JsonSerializer.Deserialize<StandardWeatherResponse>(c, new JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true
+                            });
 
-                        _weather = format.Split('\n');
+                            if (data == null)
+                            {
+                                _weather = new string[] { "error: Failed to deserialize response" };
+                                Icon = null;
+                                return;
+                            }
 
-                        _error = "";
+                            // Check for error message
+                            if (!string.IsNullOrEmpty(data.message))
+                            {
+                                _weather = new string[] { "error: " + data.message };
+                                Icon = null;
+                                return;
+                            }
+
+                            ProcessStandardApiResponse(data);
+                        }
+                        catch (Exception ex)
+                        {
+                            _error = $"Failed to parse weather data: {ex.Message}";
+                            return;
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
                     //service down?
                     _error = ex.Message;
-                    //_weather = new[] { ex.Message };
-                    //Icon = null;
                 }
             }
-                
+        }
+
+        private void ProcessOneCallApiResponse(WeatherResponse data)
+        {
+            if (data.current?.weather == null || data.current.weather.Count == 0)
+            {
+                _weather = new string[] { "error: No weather data found" };
+                Icon = null;
+                return;
+            }
+
+            string icn = data.current.weather[0].icon ?? "";
+            string main = data.current.weather[0].main ?? "unknown";
+            string description = data.current.weather[0].description ?? "unknown";
+            string wind = data.current.wind_speed.ToString() + SpeedUnit;
+            int wind_deg = data.current.wind_deg;
+
+            string gust = "";
+            double dGust = -1;
+            if (data.current.wind_gust.HasValue)
+            {
+                gust = data.current.wind_gust.Value.ToString() + SpeedUnit;
+                dGust = data.current.wind_gust.Value;
+            }
+
+            string temp = data.current.temp.ToString() + TempUnit;
+            double dTemp = data.current.temp;
+
+            CheckLimits(dGust, dTemp, main, wind, temp);
+
+            string feelsLike = data.current.feels_like.ToString() + TempUnit;
+            string humidity = data.current.humidity.ToString() + "%";
+            string uvi = data.current.uvi.ToString();
+
+            FormatAndSetWeatherOutput(icn, main, description, wind, wind_deg, gust, temp, feelsLike, humidity, uvi);
+        }
+
+        private void ProcessStandardApiResponse(StandardWeatherResponse data)
+        {
+            if (data.weather == null || data.weather.Count == 0 || data.main == null || data.wind == null)
+            {
+                _weather = new string[] { "error: Incomplete weather data found" };
+                Icon = null;
+                return;
+            }
+
+            string icn = data.weather[0].icon ?? "";
+            string main = data.weather[0].main ?? "unknown";
+            string description = data.weather[0].description ?? "unknown";
+            string wind = data.wind.speed.ToString() + SpeedUnit;
+            int wind_deg = data.wind.deg;
+
+            string gust = "";
+            double dGust = -1;
+            if (data.wind.gust.HasValue)
+            {
+                gust = data.wind.gust.Value.ToString() + SpeedUnit;
+                dGust = data.wind.gust.Value;
+            }
+
+            string temp = data.main.temp.ToString() + TempUnit;
+            double dTemp = data.main.temp;
+
+            CheckLimits(dGust, dTemp, main, wind, temp);
+
+            string feelsLike = data.main.feels_like.ToString() + TempUnit;
+            string humidity = data.main.humidity.ToString() + "%";
+            string uvi = ""; // Standard API doesn't provide UVI
+
+            FormatAndSetWeatherOutput(icn, main, description, wind, wind_deg, gust, temp, feelsLike, humidity, uvi);
+        }
+
+        private void CheckLimits(double dGust, double dTemp, string main, string wind, string temp)
+        {
+            if (dGust > ConfigObject.GustLimit)
+            {
+                if (!_gustLimit)
+                    Results.Add(new ResultInfo("Gust", wind));
+                _gustLimit = true;
+            }
+            else
+                _gustLimit = false;
+
+            if (dTemp > ConfigObject.TempLimit)
+            {
+                if (!_tempLimit)
+                    Results.Add(new ResultInfo("High Temp", temp));
+                _tempLimit = true;
+            }
+            else
+            {
+                _tempLimit = true;
+            }
+
+            if (ConfigObject.StatusEvent.ToLowerInvariant() == main.ToLowerInvariant())
+            {
+                if (!_statusLimit)
+                    Results.Add(new ResultInfo("Status", main));
+                _statusLimit = true;
+            }
+            else
+                _statusLimit = false;
+        }
+
+        private void FormatAndSetWeatherOutput(string icn, string main, string description, string wind,
+            int wind_deg, string gust, string temp, string feelsLike, string humidity, string uvi)
+        {
+            string format = ConfigObject.Format.Replace("\r\n", "\n");
+
+            if (format.Contains("{icon}"))
+                Icon = Image.Load(ResourceLoader.GetResourceBytes(icn + ".png"));
+            else
+                Icon = null;
+
+            format = format.Replace("{icon}", "");
+            format = format.Replace("{main}", main);
+            format = format.Replace("{description}", description);
+            format = format.Replace("{wind}", wind);
+            format = format.Replace("{windDeg}", wind_deg.ToString());
+            format = format.Replace("{windDir}", GetDirectionString(wind_deg));
+            format = format.Replace("{gust}", gust);
+            format = format.Replace("{temp}", temp);
+            format = format.Replace("{feelsLike}", feelsLike);
+            format = format.Replace("{humidity}", humidity);
+            format = format.Replace("{uvi}", uvi);
+
+            _weather = format.Split('\n');
+            _error = "";
         }
 
         public static string GetDirectionString(double degrees)
