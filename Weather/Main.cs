@@ -192,40 +192,7 @@ namespace Plugins
                 }
             }
         }
-        private bool HasKey(dynamic obj, string path)
-        {
-            try
-            {
-                if (obj == null) return false;
 
-                // Split on '.' to handle nested paths
-                var segments = path.Split('.');
-                object current = obj;
-
-                foreach (string segment in segments)
-                {
-                    // Convert current to IDictionary<string, object>, which is what an ExpandoObject is under the hood
-                    if (current is IDictionary<string, object> dict)
-                    {
-                        if (!dict.TryGetValue(segment, out object next))
-                            return false;
-
-                        current = next; // go deeper
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
-                // If we've reached here, we've found all segments
-                return current != null;
-            }
-            catch
-            {
-                return false;
-            }
-        }
         static readonly HttpClient client = new HttpClient();
 
         private async Task UpdateWeather()

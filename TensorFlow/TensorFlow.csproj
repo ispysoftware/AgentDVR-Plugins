@@ -12,8 +12,8 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<PlatformTarget>x64</PlatformTarget>
-    <AssemblyVersion>1.3.0.0</AssemblyVersion>
-    <FileVersion>1.3.0.0</FileVersion>
+    <AssemblyVersion>1.3.1.0</AssemblyVersion>
+    <FileVersion>1.3.1.0</FileVersion>
 	</PropertyGroup>
 
   <ItemGroup>
@@ -25,14 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Emgu.TF.Protobuf" Version="2.16.1.1620" />
-	<PackageReference Include="Emgu.TF.runtime.windows" Version="2.16.1.1620" />
+	<PackageReference Include="Emgu.TF.Protobuf" Version="2.19.0.1709" />
+	<PackageReference Include="Emgu.TF.runtime.windows" Version="2.19.0.1709" />
 	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-	<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
-	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
-    <PackageReference Include="Emgu.TF" Version="2.16.1.1620" />
-    <PackageReference Include="Emgu.TF.Models" Version="2.16.1.1620" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+	<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
+    <PackageReference Include="Emgu.TF" Version="2.19.0.1709" />
+    <PackageReference Include="Emgu.TF.Models" Version="2.19.0.1709" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
   </ItemGroup>
 
   <Import Project="..\PluginUtils\PluginUtils.projitems" Label="Shared" />
