@@ -5,7 +5,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Authors>DeveloperInABox</Authors>
     <Description>Video Surveillance Software</Description>
-    <Copyright>2025 DeveloperInABox</Copyright>
+    <Copyright>2026 DeveloperInABox</Copyright>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AssemblyVersion>1.1.6.0</AssemblyVersion>
     <FileVersion>1.1.6.0</FileVersion>
