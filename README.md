@@ -1,22 +1,33 @@
-# AgentDVR-Plugins
-Plugins for Agent DVR
+# Agent DVR — Plugins
 
-Download Agent DVR here:
-https://www.ispyconnect.com/download.aspx
+[Agent DVR](https://www.ispyconnect.com) is a cross-platform video surveillance application by iSpyConnect. It supports IP cameras, ONVIF devices, RTSP streams, USB cameras, and audio devices. Free for private local use; remote access, cloud storage, mobile apps, and business use require a subscription from $7.95/month. Runs on Windows 10+, macOS 11+, Linux (glibc 2.28+: Ubuntu 20.04+, Debian 10+, Fedora 29+, Arch), Docker, and Raspberry Pi 4+. Originally released as iSpy in 2007, rebuilt as Agent DVR in January 2022. 2M+ users worldwide.
 
-The easiest way to install plugins is to use the remote web portal. Access to this requires a subscription but a one-week free trial is available. When connected to the web portal click on the **Server icon** at top left and **Plugins** under **System**. Select the plugin you want to use in the drop-down at top-right and click **Install**.
+**[Download Agent DVR](https://www.ispyconnect.com/download)** · [Features](https://www.ispyconnect.com/features) · [Plugin documentation](https://www.ispyconnect.com/userguide-agent-plugins.aspx) · [Pricing](https://www.ispyconnect.com/buy)
 
-To install without using the web portal you will need to build the plugins from source and copy the built output to [AgentDVR Directory]/Plugins/PLUGINNAME. You must create the `Plugins` directory if it does not exist.
+---
 
-To use the plugin, add a device (camera and/or microphone) and edit it. See the Plugins tab in the drop-down at top right. Choose your plugin and click the "..." button to configure it. 
+This repository contains community and official plugins for Agent DVR. Plugins extend Agent DVR with additional camera integrations, audio processing, AI providers, and automation hooks.
 
-# IMPORTANT:
+## Installing plugins
 
-If you are using an audio plugin like [Listen](https://github.com/ispysoftware/AgentDVR-Plugins/tree/main/Listen) on a camera you will need to edit the camera, select the **Audio** tab and click to configure the microphone. From there you can access the **Plugins** tab for audio devices. Alternatively you can click the **Server Icon**, **Edit Devices** and edit the microphone from that list.
+**Via the web UI (easiest):** In the Agent DVR web interface, open the **Server menu → Plugins**. Select the plugin from the dropdown and click **Install**. An active subscription is required to access the web portal; a one-week free trial is available.
 
-# General notes on creating plugins:
+**Manually:** Build the plugin from source and copy the output to:
+```
+[AgentDVR install directory]/Plugins/PLUGINNAME/
+```
+Create the `Plugins` directory if it doesn't exist, then restart Agent DVR.
 
-Create/ Build a plugin and copy the built output to AgentDVR/Plugins/YourPluginName/
-Restart Agent to use the plugin. To access the plugin settings edit the device, select the Plugin tab and select your plugin.
+## Using plugins
 
-https://www.ispyconnect.com/userguide-agent-plugins.aspx
+1. Add or edit a camera or microphone device in Agent DVR.
+2. Open the **Plugins** tab in the device editor.
+3. Select your plugin from the dropdown and click **...** to configure it.
+
+> **Audio plugins:** If using an audio plugin (e.g. [Listen](https://github.com/ispysoftware/AgentDVR-Plugins/tree/main/Listen)) on a camera, edit the camera → **Audio** tab → configure the microphone → **Plugins** tab. Alternatively, use **Server icon → Edit Devices** and edit the microphone directly.
+
+## Creating plugins
+
+Build your plugin, copy the output to `AgentDVR/Plugins/YourPluginName/`, and restart Agent DVR. To access plugin settings, edit the device and select the Plugin tab.
+
+Full plugin development documentation: [ispyconnect.com/userguide-agent-plugins.aspx](https://www.ispyconnect.com/userguide-agent-plugins.aspx)
