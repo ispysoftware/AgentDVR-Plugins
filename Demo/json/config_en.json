@@ -252,6 +252,20 @@
       ]
     },
     {
+      "header": "Polygon Zones",
+      "displayType": "Form",
+      "items": [
+        {
+          "text": "Polygon Zones",
+          "value": "",
+          "type": "PolygonManager",
+          "max": 4,
+          "bindto": "Example_Polygons",
+          "help": "Click on the video to add points. Click the first point (or double click) to close the polygon. Drag a point to move it, drag it off the video to delete it. With Graphics enabled this generates a 'Box Entered Polygon' event when the bouncing box enters a zone."
+        }
+      ]
+    },
+    {
       "header": "Spectrum Analyser",
       "displayType": "Form",
       "items": [

@@ -53,7 +53,9 @@
     private string example_ZoneField;
     
     private string example_Trip_WiresField;
-    
+
+    private string example_PolygonsField;
+
     public configuration() {
         this.supportsAudioField = true;
         this.supportsVideoField = true;
@@ -120,6 +122,7 @@
             "00000001111111111111111111111111100000000000000000000001111111111111111111111111" +
             "1000000000000000000000011111111";
         this.example_Trip_WiresField = "";
+        this.example_PolygonsField = "";
     }
     
     /// <remarks/>
@@ -389,6 +392,16 @@
         }
         set {
             this.example_Trip_WiresField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string Example_Polygons {
+        get {
+            return this.example_PolygonsField;
+        }
+        set {
+            this.example_PolygonsField = value;
         }
     }
 }

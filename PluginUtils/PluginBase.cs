@@ -65,7 +65,9 @@ namespace PluginUtils
         {
             lock (ResultsLock)
             {
-                string json = JsonSerializer.Serialize(Results);
+                //JSONOptions includes fields — ResultInfo uses public fields, which
+                //System.Text.Json would otherwise serialize as empty objects
+                string json = JsonSerializer.Serialize(Results, Utils.JSONOptions);
                 Results.Clear();
                 return json;
             }

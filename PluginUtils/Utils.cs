@@ -14,10 +14,13 @@ namespace PluginUtils
     public static class Utils
     {
         public static Exception LastException { get; set; }
-        static JsonSerializerOptions JSONOptions = new JsonSerializerOptions
+        //match Newtonsoft behaviour: case-insensitive names and public fields included
+        //(Points, Areas, ResultInfo etc use public fields, which System.Text.Json
+        //ignores unless IncludeFields is set)
+        internal static readonly JsonSerializerOptions JSONOptions = new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = false, // Makes property name matching case-insensitive
-                                                 // You can add more options here if necessary
+            PropertyNameCaseInsensitive = true,
+            IncludeFields = true
         };
 
         public static bool TaskRunning(Task t)
@@ -449,6 +452,51 @@ namespace PluginUtils
             return tripWireList;
         }
 
+        public static List<Point[]> ParsePolygons(Size frameSize, string json)
+        {
+            var polygonList = new List<Point[]>();
+            if (string.IsNullOrEmpty(json)) return polygonList;
+
+            try
+            {
+                var lp = JsonSerializer.Deserialize<List<List<PolygonPoint>>>(json, JSONOptions);
+                if (lp != null)
+                {
+                    foreach (var poly in lp)
+                    {
+                        if (poly == null || poly.Count < 3) continue;
+                        var pts = new Point[poly.Count];
+                        for (int i = 0; i < poly.Count; i++)
+                        {
+                            pts[i] = ScalePercentToFrame(new Point(Convert.ToInt32(poly[i].x), Convert.ToInt32(poly[i].y)), frameSize);
+                        }
+                        polygonList.Add(pts);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LastException = ex;
+            }
+            return polygonList;
+        }
+
+        //ray casting: odd number of edge crossings means the point is inside
+        public static bool PolygonContainsPoint(Point[] polygon, Point p)
+        {
+            if (polygon == null || polygon.Length < 3) return false;
+            bool inside = false;
+            for (int i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
+            {
+                if ((polygon[i].Y > p.Y) != (polygon[j].Y > p.Y) &&
+                    p.X < (double)(polygon[j].X - polygon[i].X) * (p.Y - polygon[i].Y) / (polygon[j].Y - polygon[i].Y) + polygon[i].X)
+                {
+                    inside = !inside;
+                }
+            }
+            return inside;
+        }
+
         public static List<Rectangle> ParseAreas(Size frameSize, string json)
         {
             var areaList = new List<Rectangle>();
@@ -649,7 +697,7 @@ namespace PluginUtils
                     // For other types, attempt to deserialize using System.Text.Json
                     if (actualValue is string jsonString)
                     {
-                        convertedValue = JsonSerializer.Deserialize(jsonString, targetType);
+                        convertedValue = JsonSerializer.Deserialize(jsonString, targetType, JSONOptions);
                     }
                     else
                     {

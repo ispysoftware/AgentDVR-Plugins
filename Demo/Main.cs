@@ -19,6 +19,8 @@ namespace Plugins
         private bool _needUpdate = false;
         private Pen _wirepen, _trippedpen;
         private List<Line2D> _tripwires = new List<Line2D>();
+        private List<System.Drawing.Point[]> _polygons = new List<System.Drawing.Point[]>();
+        private List<DateTime> _polygonTripped = new List<DateTime>();
 
         public Main():base()
         {
@@ -54,7 +56,7 @@ namespace Plugins
 
         public override List<string> GetCustomEvents()
         {
-            return new List<string>() { "Box Bounce", "Box Crossed Tripwire" };
+            return new List<string>() { "Box Bounce", "Box Crossed Tripwire", "Box Entered Polygon" };
         }
 
         public override void SetConfiguration(string json)
@@ -120,6 +122,10 @@ namespace Plugins
             if (_needUpdate)
             {
                 _tripwires = Utils.ParseTripWires(sz, ConfigObject.Example_Trip_Wires);
+                _polygons = Utils.ParsePolygons(sz, ConfigObject.Example_Polygons);
+                _polygonTripped = new List<DateTime>();
+                for (int i = 0; i < _polygons.Count; i++)
+                    _polygonTripped.Add(DateTime.MinValue);
                 _needUpdate = false;
             }
             //fire off an alert every 10 seconds
@@ -186,6 +192,41 @@ namespace Plugins
 
                             }
                         }
+                        //draw polygon zones if defined
+                        if (_polygons.Count > 0)
+                        {
+                            var boxCentre = new System.Drawing.Point(recLoc.X + recSize / 2, recLoc.Y + recSize / 2);
+                            for (int i = 0; i < _polygons.Count; i++)
+                            {
+                                var poly = _polygons[i];
+                                var points = new PointF[poly.Length];
+                                float cx = 0, cy = 0;
+                                for (int j = 0; j < poly.Length; j++)
+                                {
+                                    points[j] = new PointF(poly[j].X, poly[j].Y);
+                                    cx += poly[j].X;
+                                    cy += poly[j].Y;
+                                }
+                                cx /= poly.Length;
+                                cy /= poly.Length;
+
+                                var pen = _wirepen;
+                                if (Utils.PolygonContainsPoint(poly, boxCentre))
+                                {
+                                    pen = _trippedpen;
+                                    if (_polygonTripped[i] < DateTime.UtcNow.AddSeconds(-4))
+                                    {
+                                        //box entered polygon, suspend new events from this polygon for at least 4 seconds
+                                        _polygonTripped[i] = DateTime.UtcNow;
+                                        Results.Add(new ResultInfo("Box Entered Polygon", "box entered polygon " + (i + 1)));
+                                    }
+                                }
+
+                                image.Mutate(x => x.DrawPolygon(pen, points));
+                                image.Mutate(x => x.DrawText((i + 1).ToString(), _drawFont, Color.White, new PointF(cx, cy)));
+                            }
+                        }
+
                         //draw rectangles if defined
                         if (!string.IsNullOrEmpty(ConfigObject.Example_Area))
                         {
