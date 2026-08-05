@@ -1,1 +1,1 @@
-﻿Please see https://www.ispyconnect.com/userguide-agent-plugins.aspx for instructions
+﻿Please see https://www.ispyconnect.com/docs/agent/plugins for instructions
