@@ -63,7 +63,59 @@ namespace Plugins
         {
             base.SetConfiguration(json);
             _needUpdate = true;
-            
+
+        }
+
+        //Commands arrive from "plugincommand" buttons in the configuration UI or via the HTTP API:
+        //  http://localhost:8090/command.cgi?cmd=plugincommand&ot=2&oid=1&command=reset
+        //The command string is free-form - this example uses "name" or "name:argument".
+        //Return JSON: "msg" is shown as a status message in the UI. Return null for unknown commands
+        //(the API then responds with CommandFailed).
+        public override string Command(string command)
+        {
+            if (string.IsNullOrEmpty(command))
+                return null;
+
+            string name = command, arg = "";
+            int i = command.IndexOf(':');
+            if (i > -1)
+            {
+                name = command.Substring(0, i);
+                arg = command.Substring(i + 1);
+            }
+
+            switch (name.ToLowerInvariant())
+            {
+                case "reset":
+                    //force tripwires/polygons to be re-parsed on the next frame
+                    _needUpdate = true;
+                    return "{\"msg\":\"Demo plugin reset\"}";
+
+                case "mirror":
+                    //toggle, or set explicitly: mirror:on / mirror:off
+                    ConfigObject.MirrorEnabled = arg == "" ? !ConfigObject.MirrorEnabled : arg.Equals("on", StringComparison.OrdinalIgnoreCase);
+                    return "{\"msg\":\"Mirror " + (ConfigObject.MirrorEnabled ? "on" : "off") + "\"}";
+
+                case "volume":
+                    //volume:75
+                    if (!int.TryParse(arg, out int vol) || vol < 0 || vol > 100)
+                        return "{\"msg\":\"Usage: volume:0-100\"}";
+                    ConfigObject.Volume = vol;
+                    return "{\"msg\":\"Volume set to " + vol + "\"}";
+
+                case "alert":
+                    //raise a custom event - actions attached to "Demo: Box Bounce" will fire
+                    Results.Add(new ResultInfo("Box Bounce", "triggered via plugin command"));
+                    return "{\"msg\":\"Alert raised\"}";
+
+                case "status":
+                    //return data for the caller - anything beyond "msg" is passed straight through to the API response
+                    return "{\"msg\":\"OK\",\"mirror\":" + ConfigObject.MirrorEnabled.ToString().ToLowerInvariant() +
+                           ",\"volume\":" + ConfigObject.Volume +
+                           ",\"tripwires\":" + _tripwires.Count +
+                           ",\"polygons\":" + _polygons.Count + "}";
+            }
+            return null;
         }
 
         public override void ProcessAgentEvent(string ev)

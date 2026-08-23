@@ -219,6 +219,22 @@
           "value": "",
           "type": "TextArea",
           "bindto": "Example_Text"
+        },
+        {
+          "text": "Reset",
+          "type": "ButtonFA",
+          "icon": "fa-rotate-left",
+          "action": "plugincommand",
+          "command": "reset",
+          "help": "Sends the 'reset' command to the plugin's Command() method. The same command is available over the HTTP API: command.cgi?cmd=plugincommand&ot=2&oid=1&command=reset"
+        },
+        {
+          "text": "Toggle Mirror",
+          "type": "ButtonFA",
+          "icon": "fa-left-right",
+          "action": "plugincommand",
+          "command": "mirror",
+          "help": "Sends the 'mirror' command. Other commands the demo understands: mirror:on, mirror:off, volume:0-100, alert, status"
         }
       ]
     },

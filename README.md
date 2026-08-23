@@ -30,4 +30,11 @@ Create the `Plugins` directory if it doesn't exist, then restart Agent DVR.
 
 Build your plugin, copy the output to `AgentDVR/Plugins/YourPluginName/`, and restart Agent DVR. To access plugin settings, edit the device and select the Plugin tab.
 
+### Sending commands to a plugin
+
+Override `Command(string command)` (from `PluginBase` / `IPlugin`) to accept commands. Return a JSON string — `{"msg":"..."}` is shown as a status message in the UI — or `null` if the command isn't recognised. Commands can be triggered two ways:
+
+- **From the plugin's config UI:** add a button item to your config JSON with `"type":"ButtonFA"`, `"action":"plugincommand"` and `"command":"yourcommand"` (see [Demo/json/config_en.json](Demo/json/config_en.json)).
+- **From the HTTP API:** `http://localhost:8090/command.cgi?cmd=plugincommand&ot=2&oid=1&command=yourcommand` (`ot` = 1 for microphones, 2 for cameras; `oid` = device ID). The device must be switched on. Requires a version of Agent DVR released after August 2026.
+
 Full plugin development documentation: [ispyconnect.com/userguide-agent-plugins.aspx](https://www.ispyconnect.com/userguide-agent-plugins.aspx)

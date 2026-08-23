@@ -120,6 +120,12 @@ namespace PluginUtils
             return null;
         }
 
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(PluginBase))]
+        public virtual string Command(string command)
+        {
+            return null;
+        }
+
 
         public void SetCameraInfo(string name, int objectID, int localPort)
         {

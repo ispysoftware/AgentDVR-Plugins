@@ -56,9 +56,18 @@ namespace PluginUtils
         List<string> GetCustomEvents();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         string GetResultJSON();
+
+        /// <summary>
+        /// Process a command sent to the plugin. Commands arrive from buttons in the plugin's configuration UI
+        /// (items with "action":"plugincommand" and a "command" field) and from the HTTP API:
+        /// command.cgi?cmd=plugincommand&amp;ot={ot}&amp;oid={oid}&amp;command={command}
+        /// </summary>
+        /// <param name="command">the command string</param>
+        /// <returns>A JSON string, for example {"msg":"done"} - the "msg" value is displayed in the UI. Return null if the command is not recognised.</returns>
+        string Command(string command);
     }
 }
