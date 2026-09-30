@@ -24,7 +24,7 @@ Create the `Plugins` directory if it doesn't exist, then restart Agent DVR.
 2. Open the **Plugins** tab in the device editor.
 3. Select your plugin from the dropdown and click **...** to configure it.
 
-> **Audio plugins:** If using an audio plugin (e.g. [Listen](https://github.com/ispysoftware/AgentDVR-Plugins/tree/main/Listen)) on a camera, edit the camera → **Audio** tab → configure the microphone → **Plugins** tab. Alternatively, use **Server icon → Edit Devices** and edit the microphone directly.
+> **Audio plugins:** If using an audio plugin (e.g. [Gain](https://github.com/ispysoftware/AgentDVR-Plugins/tree/main/Gain)) on a camera, edit the camera → **Audio** tab → configure the microphone → **Plugins** tab. Alternatively, use **Server icon → Edit Devices** and edit the microphone directly.
 
 ## Creating plugins
 
