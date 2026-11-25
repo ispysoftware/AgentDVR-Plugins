@@ -526,23 +526,22 @@ namespace PluginUtils
         {
             if (zoneMap.Length > 0)
             {
-                double wmulti = Convert.ToDouble(imageSize.Width) / Convert.ToDouble(100);
-                double hmulti = Convert.ToDouble(imageSize.Height) / Convert.ToDouble(100);
-
                 var l = new List<Rectangle>();
                 int x = 0, y = 0;
-                var p = 5d;
+                const int xlim = 64; // the zone map is a 64 x 48 grid (5 px cells on 320 x 240), column by column
                 int ylim = 48;
 
-                double pcx = (p / 320d) * 100d;
-                double pcy = (p / 240d) * 100d;
-                int rx = Convert.ToInt32(pcx * wmulti);
-                int ry = Convert.ToInt32(pcy * hmulti);
+                // Both edges of a cell from its index, rounded the same way, so neighbouring cells
+                // meet exactly (as Agent's Helper.ImageZones). A rounded start plus a rounded size
+                // could leave a 1-pixel row or column between cells - live video through a mask.
+                int w = imageSize.Width, h = imageSize.Height;
                 foreach (var c in zoneMap)
                 {
                     if (c != '0')
                     {
-                        l.Add(new Rectangle(Convert.ToInt32(x * pcx * wmulti), Convert.ToInt32(y * pcy * hmulti), rx, ry));
+                        int x0 = (int)((long)x * w / xlim), x1 = (int)((long)(x + 1) * w / xlim);
+                        int y0 = (int)((long)y * h / ylim), y1 = (int)((long)(y + 1) * h / ylim);
+                        l.Add(new Rectangle(x0, y0, x1 - x0, y1 - y0));
                     }
                     y++;
                     if (y == ylim)
